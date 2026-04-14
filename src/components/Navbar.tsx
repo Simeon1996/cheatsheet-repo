@@ -13,7 +13,7 @@ export default function Navbar() {
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 text-zinc-100 hover:text-white transition-colors shrink-0">
           <Terminal className="h-5 w-5 text-indigo-400" />
-          <span className="font-bold text-lg">CheatSheet</span>
+          <span className="font-bold text-lg">ReferentialSheet</span>
         </Link>
 
         <div className="flex items-center gap-1 sm:gap-2">

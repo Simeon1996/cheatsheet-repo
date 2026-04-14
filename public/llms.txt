@@ -1,4 +1,4 @@
-# CheatSheet
+# ReferentialSheet
 
 > A curated, searchable library of developer cheatsheets with syntax-highlighted, copy-ready code blocks.
 
@@ -6,7 +6,7 @@ Built by [Simeon Ivanov](https://simeonivanov.dev).
 
 ## What this site is
 
-CheatSheet is a read-only reference library of curated developer cheatsheets covering command-line tools, programming languages, DevOps workflows, security, data science, and AI tooling. All public cheatsheets are hand-seeded and freely browsable without an account.
+ReferentialSheet is a read-only reference library of curated developer cheatsheets covering command-line tools, programming languages, DevOps workflows, security, data science, and AI tooling. All public cheatsheets are hand-seeded and freely browsable without an account.
 
 Users may register to maintain a private personal workspace with their own snippets — those are not publicly accessible.
 

@@ -58,7 +58,7 @@ export default function Image() {
             marginBottom: 24,
           }}
         >
-          CheatSheet
+          ReferentialSheet
         </div>
 
         {/* title */}

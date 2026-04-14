@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "CheatSheet — Developer Command Reference",
-    short_name: "CheatSheet",
+    name: "ReferentialSheet — Developer Command Reference",
+    short_name: "ReferentialSheet",
     description:
       "A curated, searchable library of developer cheatsheets — Bash, Git, Docker, Kubernetes, Python, SQL, Regex, and more.",
     start_url: "/",
