@@ -1,0 +1,63 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String     @id @default(cuid())
+  name           String
+  email          String     @unique
+  hashedPassword String
+  image          String?
+  role           Role       @default(USER)
+  categories     Category[]
+  snippets       Snippet[]
+  createdAt      DateTime   @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  icon        String?
+  color       String?
+  description String?
+  userId      String?
+  isPublic    Boolean   @default(false)
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  snippets    Snippet[]
+  createdAt   DateTime  @default(now())
+}
+
+model Snippet {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String?
+  categoryId  String
+  userId      String?
+  isPublic    Boolean   @default(false)
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commands    Command[]
+  createdAt   DateTime  @default(now())
+}
+
+model Command {
+  id        String  @id @default(cuid())
+  label     String?
+  content   String
+  language  String  @default("bash")
+  order     Int     @default(0)
+  snippetId String
+  snippet   Snippet @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+}
