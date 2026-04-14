@@ -52,11 +52,36 @@ const FEATURES = [
   },
 ];
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "CheatSheet",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  description:
+    "A curated, searchable library of developer cheatsheets — Bash, Git, Docker, Kubernetes, Python, SQL, Regex, and more.",
+  applicationCategory: "DeveloperApplication",
+  operatingSystem: "All",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  author: { "@type": "Person", name: "Simeon Ivanov", url: "https://simeonivanov.dev" },
+  featureList: [
+    "Curated public cheatsheets",
+    "Syntax-highlighted code blocks",
+    "One-click copy",
+    "Personal private workspace",
+    "AI-assisted snippet generation",
+    "Searchable category browser",
+  ],
+};
+
 export default function HomePage() {
   const { data: session } = useSession();
 
   return (
     <div className="flex min-h-screen flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
 
       <main className="flex-1">

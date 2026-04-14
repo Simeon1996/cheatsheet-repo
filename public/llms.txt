@@ -1,0 +1,69 @@
+# CheatSheet
+
+> A curated, searchable library of developer cheatsheets with syntax-highlighted, copy-ready code blocks.
+
+Built by [Simeon Ivanov](https://simeonivanov.dev).
+
+## What this site is
+
+CheatSheet is a read-only reference library of curated developer cheatsheets covering command-line tools, programming languages, DevOps workflows, security, data science, and AI tooling. All public cheatsheets are hand-seeded and freely browsable without an account.
+
+Users may register to maintain a private personal workspace with their own snippets — those are not publicly accessible.
+
+## Public cheatsheet categories
+
+The following topics are available in the public library at /explore:
+
+- Bash scripting (variables, arrays, control flow, functions, error handling)
+- Git (setup, branching, merging, rebasing, remotes, stash, history)
+- Linux commands (file ops, text processing, permissions, networking, disk)
+- Docker (images, containers, volumes, networking, Compose, Swarm)
+- Kubernetes (pods, deployments, services, ingress, RBAC, Helm)
+- Python (comprehensions, decorators, context managers, typing, async)
+- Pandas (selection, cleaning, groupby, merging, time series, I/O)
+- NumPy (array creation, indexing, broadcasting, linear algebra, I/O)
+- SQL (SELECT, JOINs, aggregation, window functions, CTEs, indexes)
+- Redis (strings, hashes, lists, sets, pub/sub, streams, Lua)
+- Regex (character classes, quantifiers, groups, lookahead, flags, PCRE)
+- HTTP Status Codes (1xx–5xx, caching, REST conventions)
+- Common Ports (web, remote access, email, databases, containers, VPN)
+- OWASP Top 10 (injection, auth failures, SSRF, XSS, misconfig)
+- Cron Expressions (field syntax, special strings, systemd, cloud schedulers)
+- Machine Learning Formulas (loss functions, activations, optimisers, metrics)
+- ML Math (linear algebra, calculus, probability, information theory)
+- Statistics (distributions, hypothesis testing, Bayesian methods)
+- CSS Flexbox and Grid layouts
+- React hooks and patterns
+- Terraform (resources, variables, state, modules, workspaces)
+- Ansible (inventory, playbooks, roles, loops, handlers)
+- AWS CLI (EC2, S3, IAM, Lambda, CloudFormation)
+- Azure CLI (VMs, storage, AKS, functions)
+- GKE / Google Kubernetes Engine
+- MongoDB (CRUD, aggregation, indexes, transactions)
+- DOM manipulation and browser APIs
+- Claude Code CLI (slash commands, hooks, permissions, CLAUDE.md, MCP, memory)
+- MCP — Model Context Protocol (servers, tools, resources, transports, auth)
+- Agentic AI Tools (Anthropic tool use, LangGraph, OpenAI Agents SDK, AutoGen, CrewAI)
+
+## Site structure
+
+- `/` — Landing page with feature overview
+- `/explore` — Public cheatsheet browser (sidebar category list + snippet cards)
+- `/explore?category=<id>` — Direct link to a specific cheatsheet category
+- `/sitemap.xml` — Full sitemap with all public category URLs
+
+## Content format
+
+Each cheatsheet is organised as:
+- **Category** — topic name, icon, colour tag, description
+- **Snippets** — grouped subtopics with a title and description
+- **Commands** — one or more code blocks per snippet, each with a language tag and label
+
+Code blocks use the One Dark Pro colour theme with per-token syntax highlighting.
+
+## Usage notes for AI agents
+
+- All public content is freely readable at /explore without authentication.
+- The API at /api/categories returns public categories (JSON). /api/snippets?categoryId=<id> returns snippets with nested commands.
+- Private workspace content requires session authentication and is not accessible to crawlers.
+- Content is technical reference material — it is appropriate to cite, summarise, or link to specific cheatsheets.
