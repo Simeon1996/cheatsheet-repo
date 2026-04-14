@@ -4,7 +4,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
-import { User, Mail, Shield } from "lucide-react";
+import { User, Mail } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
@@ -21,7 +22,7 @@ export default function ProfilePage() {
       <div className="flex min-h-screen flex-col">
         <Navbar />
         <main className="flex flex-1 items-center justify-center">
-          <div className="text-zinc-400">Loading...</div>
+          <Spinner size="lg" />
         </main>
       </div>
     );
@@ -43,9 +44,6 @@ export default function ProfilePage() {
                 <h2 className="text-lg font-semibold text-zinc-100">
                   {session.user.name}
                 </h2>
-                <p className="text-sm text-zinc-400">
-                  {session.user.role === "ADMIN" ? "Administrator" : "User"}
-                </p>
               </div>
             </div>
 
@@ -60,15 +58,6 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <Shield className="h-4 w-4 text-zinc-500" />
-                <div>
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider">
-                    Role
-                  </p>
-                  <p className="text-sm text-zinc-200">{session.user.role}</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>

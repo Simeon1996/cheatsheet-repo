@@ -5,12 +5,14 @@ import Navbar from "@/components/Navbar";
 import CategorySidebar, { CategoryData } from "@/components/CategorySidebar";
 import SnippetCard, { SnippetData } from "@/components/SnippetCard";
 import { Compass, FolderOpen } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 
 export default function ExplorePage() {
   const [categories, setCategories] = useState<CategoryData[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [snippets, setSnippets] = useState<SnippetData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingSnippets, setLoadingSnippets] = useState(false);
 
   const fetchCategories = useCallback(async () => {
     const res = await fetch("/api/categories");
@@ -21,9 +23,14 @@ export default function ExplorePage() {
   }, []);
 
   const fetchSnippets = useCallback(async (categoryId: string) => {
-    const res = await fetch(`/api/snippets?categoryId=${categoryId}`);
-    const data = await res.json();
-    setSnippets(data);
+    setLoadingSnippets(true);
+    try {
+      const res = await fetch(`/api/snippets?categoryId=${categoryId}`);
+      const data = await res.json();
+      setSnippets(data);
+    } finally {
+      setLoadingSnippets(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -53,8 +60,8 @@ export default function ExplorePage() {
 
         <main className="flex-1 overflow-y-auto">
           {loading ? (
-            <div className="flex h-full items-center justify-center text-zinc-500">
-              Loading...
+            <div className="flex h-full items-center justify-center">
+              <Spinner size="lg" />
             </div>
           ) : selectedCategory ? (
             <div className="p-6">
@@ -72,7 +79,11 @@ export default function ExplorePage() {
                 </div>
               </div>
 
-              {snippets.length === 0 ? (
+              {loadingSnippets ? (
+                <div className="flex justify-center py-20">
+                  <Spinner size="lg" />
+                </div>
+              ) : snippets.length === 0 ? (
                 <div className="text-center py-12 text-zinc-500">
                   <FolderOpen className="h-12 w-12 mx-auto mb-3 opacity-50" />
                   <p>No snippets in this category</p>
@@ -97,8 +108,8 @@ export default function ExplorePage() {
                   Explore Public Cheatsheets
                 </h2>
                 <p className="mt-2 text-sm max-w-sm mx-auto">
-                  Browse community-shared commands and snippets. Select a
-                  category from the sidebar to get started.
+                  Browse curated public cheatsheets. Select a category from
+                  the sidebar to get started.
                 </p>
               </div>
             </div>

@@ -79,11 +79,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Category not found" }, { status: 404 });
   }
 
-  if (category.userId !== session.user.id && session.user.role !== "ADMIN") {
+  if (category.userId !== session.user.id) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
-
-  const isAdmin = session.user.role === "ADMIN";
 
   const snippet = await prisma.snippet.create({
     data: {
@@ -92,7 +90,7 @@ export async function POST(req: NextRequest) {
       imageUrl: imageUrl || null,
       categoryId,
       userId: session.user.id,
-      isPublic: isAdmin ? (body.isPublic ?? category.isPublic) : false,
+      isPublic: false,
       commands: commands
         ? {
             create: commands.map(

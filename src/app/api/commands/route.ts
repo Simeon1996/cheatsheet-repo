@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Snippet not found" }, { status: 404 });
   }
 
-  if (snippet.userId !== session.user.id && session.user.role !== "ADMIN") {
+  if (snippet.userId !== session.user.id) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

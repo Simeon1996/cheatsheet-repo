@@ -19,12 +19,12 @@ export async function PUT(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  if (existing.userId !== session.user.id && session.user.role !== "ADMIN") {
+  if (existing.userId !== session.user.id) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const body = await req.json();
-  const { name, icon, color, description, isPublic } = body;
+  const { name, icon, color, description } = body;
 
   // WARN-8: Max length checks
   if (name !== undefined && (typeof name !== "string" || name.length > 100)) {
@@ -51,7 +51,6 @@ export async function PUT(
       ...(icon !== undefined && { icon }),
       ...(color !== undefined && { color }),
       ...(description !== undefined && { description }),
-      ...(isPublic !== undefined && session.user.role === "ADMIN" && { isPublic }),
     },
     include: {
       _count: { select: { snippets: true } },
@@ -77,7 +76,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  if (existing.userId !== session.user.id && session.user.role !== "ADMIN") {
+  if (existing.userId !== session.user.id) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

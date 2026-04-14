@@ -48,8 +48,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const isAdmin = session.user.role === "ADMIN";
-
   const category = await prisma.category.create({
     data: {
       name,
@@ -57,7 +55,7 @@ export async function POST(req: NextRequest) {
       color: color || null,
       description: description || null,
       userId: session.user.id,
-      isPublic: isAdmin ? (body.isPublic ?? false) : false,
+      isPublic: false,
     },
     include: {
       _count: { select: { snippets: true } },

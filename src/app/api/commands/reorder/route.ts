@@ -48,10 +48,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (
-    cmd1.snippet.userId !== session.user.id &&
-    session.user.role !== "ADMIN"
-  ) {
+  if (cmd1.snippet.userId !== session.user.id) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

@@ -36,7 +36,7 @@ const FEATURES = [
     icon: Shield,
     title: "Private Workspace",
     description:
-      "Your personal cheatsheets are private by default. Only you can see and manage them.",
+      "Categories you create are private to you — only you can see and manage them. Public cheatsheets are curated and cannot be created by users.",
   },
   {
     icon: Zap,
@@ -161,7 +161,7 @@ export default function HomePage() {
       </main>
 
       <footer className="border-t border-zinc-800 py-6 text-center text-sm text-zinc-500">
-        CheatSheet &mdash; Built with Next.js, Tailwind, and Prisma
+        CheatSheet &mdash; 
       </footer>
     </div>
   );

@@ -13,6 +13,7 @@ import SnippetModal from "@/components/modals/SnippetModal";
 import CommandModal from "@/components/modals/CommandModal";
 import Button from "@/components/ui/Button";
 import { Plus, FolderOpen, Pencil, Trash2 } from "lucide-react";
+import Spinner from "@/components/ui/Spinner";
 import { getColorClasses } from "@/lib/utils";
 import toast from "react-hot-toast";
 
@@ -287,7 +288,7 @@ export default function WorkspacePage() {
       <div className="flex min-h-screen flex-col">
         <Navbar />
         <main className="flex flex-1 items-center justify-center">
-          <div className="text-zinc-400">Loading...</div>
+          <Spinner size="lg" />
         </main>
       </div>
     );
@@ -368,7 +369,9 @@ export default function WorkspacePage() {
               </div>
 
               {loadingSnippets ? (
-                <div className="text-center py-12 text-zinc-500">Loading snippets...</div>
+                <div className="flex justify-center py-20">
+                  <Spinner size="lg" />
+                </div>
               ) : snippets.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
                   <FolderOpen className="h-12 w-12 mb-4" />
