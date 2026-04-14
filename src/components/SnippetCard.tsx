@@ -39,7 +39,7 @@ export default function SnippetCard({
   return (
     <div className="rounded-xl border border-zinc-700/60 bg-zinc-900 overflow-hidden shadow-lg shadow-black/30">
       {/* Header */}
-      <div className="flex items-start justify-between px-5 pt-5 pb-3 border-b border-zinc-800">
+      <div className="flex items-start justify-between gap-3 px-4 sm:px-5 pt-4 sm:pt-5 pb-3 border-b border-zinc-800">
         <div className="flex-1 min-w-0">
           <h3 className="text-base font-bold text-zinc-100 tracking-tight">
             {snippet.title}
@@ -51,7 +51,7 @@ export default function SnippetCard({
           )}
         </div>
         {!readOnly && (
-          <div className="flex items-center gap-1 ml-3 shrink-0">
+          <div className="flex items-center gap-1 shrink-0">
             <button
               onClick={onEdit}
               className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300 transition-colors"
@@ -81,7 +81,7 @@ export default function SnippetCard({
       )}
 
       {/* Commands */}
-      <div className="px-5 py-4 space-y-3">
+      <div className="px-4 sm:px-5 py-4 space-y-3">
         {sortedCommands.map((cmd, idx) => (
           <CommandBlock
             key={cmd.id}

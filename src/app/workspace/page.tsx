@@ -12,7 +12,7 @@ import CategoryModal from "@/components/modals/CategoryModal";
 import SnippetModal from "@/components/modals/SnippetModal";
 import CommandModal from "@/components/modals/CommandModal";
 import Button from "@/components/ui/Button";
-import { Plus, FolderOpen, Pencil, Trash2 } from "lucide-react";
+import { Plus, FolderOpen, Pencil, Trash2, Menu } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
 import { getColorClasses } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -25,6 +25,7 @@ export default function WorkspacePage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [snippets, setSnippets] = useState<SnippetData[]>([]);
   const [loadingSnippets, setLoadingSnippets] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Modals
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
@@ -46,7 +47,7 @@ export default function WorkspacePage() {
   // BUG-6: Check res.ok and handle errors
   const fetchCategories = useCallback(async () => {
     try {
-      const res = await fetch("/api/categories");
+      const res = await fetch("/api/categories?scope=mine");
       if (!res.ok) throw new Error("Failed to load categories");
       const data = await res.json();
       setCategories(data);
@@ -295,7 +296,7 @@ export default function WorkspacePage() {
   }
 
   const userCategories = categories.filter(
-    (c) => c.userId === session?.user.id || c.isPublic
+    (c) => c.userId === session?.user.id
   );
 
   return (
@@ -311,31 +312,40 @@ export default function WorkspacePage() {
             setEditingCategory(null);
             setCategoryModalOpen(true);
           }}
+          mobileOpen={sidebarOpen}
+          onMobileClose={() => setSidebarOpen(false)}
         />
 
         <main className="flex-1 overflow-y-auto">
           {selectedCategory ? (
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{selectedCategory.icon || "📁"}</span>
-                  <div>
-                    <h1 className="text-xl font-bold text-zinc-100">
+            <div className="p-4 sm:p-6">
+              <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
+                <div className="flex items-center gap-3 min-w-0">
+                  <button
+                    onClick={() => setSidebarOpen(true)}
+                    className="md:hidden shrink-0 rounded-lg p-2 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors"
+                    aria-label="Open categories"
+                  >
+                    <Menu className="h-5 w-5" />
+                  </button>
+                  <span className="text-2xl shrink-0">{selectedCategory.icon || "📁"}</span>
+                  <div className="min-w-0">
+                    <h1 className="text-lg sm:text-xl font-bold text-zinc-100 truncate">
                       {selectedCategory.name}
                     </h1>
                     {selectedCategory.description && (
-                      <p className="text-sm text-zinc-400">
+                      <p className="text-sm text-zinc-400 line-clamp-2">
                         {selectedCategory.description}
                       </p>
                     )}
                   </div>
                   <div
-                    className={`ml-2 h-2.5 w-2.5 rounded-full ${
+                    className={`shrink-0 h-2.5 w-2.5 rounded-full ${
                       getColorClasses(selectedCategory.color).badge
                     }`}
                   />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -345,7 +355,7 @@ export default function WorkspacePage() {
                     }}
                   >
                     <Pencil className="h-4 w-4" />
-                    Edit
+                    <span className="hidden sm:inline">Edit</span>
                   </Button>
                   <Button
                     variant="danger"
@@ -353,7 +363,7 @@ export default function WorkspacePage() {
                     onClick={handleDeleteCategory}
                   >
                     <Trash2 className="h-4 w-4" />
-                    Delete
+                    <span className="hidden sm:inline">Delete</span>
                   </Button>
                   <Button
                     size="sm"
@@ -363,7 +373,7 @@ export default function WorkspacePage() {
                     }}
                   >
                     <Plus className="h-4 w-4" />
-                    Add Snippet
+                    <span className="hidden sm:inline">Add Snippet</span>
                   </Button>
                 </div>
               </div>
@@ -420,7 +430,14 @@ export default function WorkspacePage() {
               )}
             </div>
           ) : (
-            <div className="flex h-full items-center justify-center">
+            <div className="flex h-full flex-col items-center justify-center gap-4 p-4">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="md:hidden flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-300 hover:border-zinc-500 hover:text-white transition-colors"
+              >
+                <Menu className="h-4 w-4" />
+                Browse Categories
+              </button>
               <div className="text-center text-zinc-500">
                 <FolderOpen className="h-16 w-16 mx-auto mb-4 opacity-50" />
                 <h2 className="text-xl font-semibold text-zinc-400">

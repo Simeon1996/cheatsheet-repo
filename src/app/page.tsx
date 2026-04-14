@@ -82,24 +82,24 @@ export default function HomePage() {
               copy with a single click.
             </p>
 
-            <div className="mt-10 flex items-center justify-center gap-4">
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
               {session ? (
                 <Link href="/workspace">
-                  <Button size="lg">
+                  <Button size="lg" className="w-full sm:w-auto">
                     <Zap className="h-5 w-5" />
                     Go to Workspace
                   </Button>
                 </Link>
               ) : (
                 <Link href="/register">
-                  <Button size="lg">
+                  <Button size="lg" className="w-full sm:w-auto">
                     <Zap className="h-5 w-5" />
                     Get Started Free
                   </Button>
                 </Link>
               )}
-              <Link href="/explore">
-                <Button variant="secondary" size="lg">
+              <Link href="/explore" className="w-full sm:w-auto">
+                <Button variant="secondary" size="lg" className="w-full">
                   Browse Public Cheatsheets
                 </Button>
               </Link>
@@ -148,11 +148,11 @@ export default function HomePage() {
             <div className="mt-8">
               {session ? (
                 <Link href="/workspace">
-                  <Button size="lg">Open Workspace</Button>
+                  <Button size="lg" className="w-full sm:w-auto">Open Workspace</Button>
                 </Link>
               ) : (
                 <Link href="/register">
-                  <Button size="lg">Create Free Account</Button>
+                  <Button size="lg" className="w-full sm:w-auto">Create Free Account</Button>
                 </Link>
               )}
             </div>

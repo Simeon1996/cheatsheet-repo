@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, X } from "lucide-react";
 import { getColorClasses } from "@/lib/utils";
 
 export interface CategoryData {
@@ -21,6 +21,9 @@ interface CategorySidebarProps {
   onSelect: (id: string) => void;
   onAdd: () => void;
   readOnly?: boolean;
+  /** Mobile drawer state — controlled by the parent page */
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
 export default function CategorySidebar({
@@ -29,6 +32,8 @@ export default function CategorySidebar({
   onSelect,
   onAdd,
   readOnly = false,
+  mobileOpen = false,
+  onMobileClose,
 }: CategorySidebarProps) {
   const [query, setQuery] = useState("");
 
@@ -38,12 +43,27 @@ export default function CategorySidebar({
       )
     : categories;
 
-  return (
+  const handleSelect = (id: string) => {
+    onSelect(id);
+    onMobileClose?.();
+  };
+
+  const inner = (
     <aside className="flex h-full w-80 flex-col border-r border-zinc-800 bg-zinc-950">
       <div className="border-b border-zinc-800 px-4 py-3 space-y-2">
-        <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-          Categories
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+            Categories
+          </h2>
+          {/* Close button — only visible in mobile drawer */}
+          <button
+            onClick={onMobileClose}
+            className="md:hidden rounded-lg p-1 text-zinc-500 hover:text-zinc-300 transition-colors"
+            aria-label="Close sidebar"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500 pointer-events-none" />
           <input
@@ -72,14 +92,14 @@ export default function CategorySidebar({
           </p>
         )}
 
-{filtered.map((cat) => {
+        {filtered.map((cat) => {
           const colors = getColorClasses(cat.color);
           const isSelected = cat.id === selectedId;
 
           return (
             <button
               key={cat.id}
-              onClick={() => onSelect(cat.id)}
+              onClick={() => handleSelect(cat.id)}
               className={`w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
                 isSelected
                   ? `${colors.bg} ${colors.text} ${colors.border} border`
@@ -95,13 +115,33 @@ export default function CategorySidebar({
                   </p>
                 )}
               </div>
-              <div
-                className={`h-2 w-2 rounded-full ${colors.badge}`}
-              />
+              <div className={`h-2 w-2 rounded-full shrink-0 ${colors.badge}`} />
             </button>
           );
         })}
       </div>
     </aside>
+  );
+
+  return (
+    <>
+      {/* Desktop — always visible */}
+      <div className="hidden md:flex h-full">{inner}</div>
+
+      {/* Mobile — slide-in drawer with backdrop */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={onMobileClose}
+          />
+          {/* Panel */}
+          <div className="relative z-10 flex h-full max-w-[85vw]">
+            {inner}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

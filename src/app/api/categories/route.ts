@@ -3,15 +3,25 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
+  const scope = req.nextUrl.searchParams.get("scope"); // "mine" | "public"
+
+  let where: Record<string, unknown>;
+
+  if (scope === "mine") {
+    // Workspace — only the authenticated user's own categories
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    where = { userId: session.user.id };
+  } else {
+    // Explore (default) — public categories only
+    where = { isPublic: true };
+  }
 
   const categories = await prisma.category.findMany({
-    where: session
-      ? {
-          OR: [{ userId: session.user.id }, { isPublic: true }],
-        }
-      : { isPublic: true },
+    where,
     include: {
       _count: { select: { snippets: true } },
     },

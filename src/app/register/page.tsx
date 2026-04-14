@@ -19,17 +19,19 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
+    if (password.length < 12) {
+      toast.error("Password must be at least 12 characters");
       return;
     }
 
     setLoading(true);
     try {
+      const normalizedEmail = email.trim().toLowerCase();
+
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email: normalizedEmail, password }),
       });
 
       if (!res.ok) {
@@ -39,7 +41,7 @@ export default function RegisterPage() {
       }
 
       const signInRes = await signIn("credentials", {
-        email,
+        email: normalizedEmail,
         password,
         redirect: false,
       });
@@ -95,9 +97,9 @@ export default function RegisterPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Min 6 characters"
+              placeholder="Min 12 characters"
               required
-              minLength={6}
+              minLength={12}
             />
             <Button type="submit" loading={loading} className="w-full">
               Create Account
