@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Input from "@/components/ui/Input";
@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,7 +52,12 @@ export default function RegisterPage() {
         router.push("/login");
       } else {
         toast.success("Account created! Welcome!");
-        router.push("/workspace");
+        const callbackUrl = searchParams.get("callbackUrl");
+        const destination =
+          callbackUrl && callbackUrl.startsWith("/")
+            ? callbackUrl
+            : "/workspace";
+        router.push(destination);
         router.refresh();
       }
     } finally {
