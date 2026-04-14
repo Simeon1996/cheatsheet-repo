@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,9 +13,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-const SITE_NAME = "ReferentialSheet";
 const SITE_DESCRIPTION =
   "A curated, searchable library of developer cheatsheets — Bash, Git, Docker, Kubernetes, Python, SQL, Regex, and more. Copy commands with one click.";
 

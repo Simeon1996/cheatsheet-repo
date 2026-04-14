@@ -12,6 +12,7 @@ import {
   Zap,
 } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { SITE_URL } from "@/lib/site";
 
 const FEATURES = [
   {
@@ -56,7 +57,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   name: "ReferentialSheet",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: SITE_URL,
   description:
     "A curated, searchable library of developer cheatsheets — Bash, Git, Docker, Kubernetes, Python, SQL, Regex, and more.",
   applicationCategory: "DeveloperApplication",
