@@ -161,7 +161,7 @@ export default function HomePage() {
       </main>
 
       <footer className="border-t border-zinc-800 py-6 text-center text-sm text-zinc-500">
-        CheatSheet &mdash; 
+        Built by <a href="https://simeonivanov.dev" className="underline">simeon.dev</a>
       </footer>
     </div>
   );

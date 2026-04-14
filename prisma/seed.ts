@@ -27,7 +27,6 @@ async function main() {
       name: "Admin",
       email: "admin@cheatsheet.dev",
       hashedPassword,
-      role: "ADMIN",
     },
   });
 

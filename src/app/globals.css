@@ -23,6 +23,40 @@ body {
   scrollbar-color: #333 transparent;
 }
 
+/* ── Shiki syntax highlighting ──────────────────────────────── */
+.shiki-wrapper .shiki {
+  background: transparent !important;
+  padding: 1rem 1.25rem;
+  font-size: 0.8125rem;   /* 13px */
+  line-height: 1.75;
+  overflow-x: auto;
+}
+
+.shiki-wrapper .shiki code {
+  font-family: var(--font-geist-mono), ui-monospace, "Cascadia Code",
+               "Fira Code", Menlo, Consolas, monospace;
+  white-space: pre;
+  counter-reset: line;
+}
+
+/* Line numbers */
+.shiki-wrapper .shiki code .line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 1.8rem;
+  margin-right: 1.2rem;
+  text-align: right;
+  color: #3d4451;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Dim single-line blocks' line number to reduce noise */
+.shiki-wrapper .shiki code:has(.line:only-child) .line::before {
+  display: none;
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {

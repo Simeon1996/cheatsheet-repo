@@ -37,16 +37,21 @@ export default function SnippetCard({
   const sortedCommands = [...snippet.commands].sort((a, b) => a.order - b.order);
 
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900 overflow-hidden">
-      <div className="flex items-start justify-between px-5 pt-5 pb-2">
+    <div className="rounded-xl border border-zinc-700/60 bg-zinc-900 overflow-hidden shadow-lg shadow-black/30">
+      {/* Header */}
+      <div className="flex items-start justify-between px-5 pt-5 pb-3 border-b border-zinc-800">
         <div className="flex-1 min-w-0">
-          <h3 className="text-base font-semibold text-zinc-100">{snippet.title}</h3>
+          <h3 className="text-base font-bold text-zinc-100 tracking-tight">
+            {snippet.title}
+          </h3>
           {snippet.description && (
-            <p className="mt-1 text-sm text-zinc-400">{snippet.description}</p>
+            <p className="mt-1.5 text-sm text-zinc-300 leading-relaxed">
+              {snippet.description}
+            </p>
           )}
         </div>
         {!readOnly && (
-          <div className="flex items-center gap-1 ml-3">
+          <div className="flex items-center gap-1 ml-3 shrink-0">
             <button
               onClick={onEdit}
               className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300 transition-colors"
@@ -66,7 +71,7 @@ export default function SnippetCard({
       </div>
 
       {snippet.imageUrl && (
-        <div className="px-5 py-2">
+        <div className="px-5 py-3">
           <img
             src={snippet.imageUrl}
             alt={snippet.title}
@@ -75,24 +80,23 @@ export default function SnippetCard({
         </div>
       )}
 
-      <div className="px-5 pb-5 space-y-2">
-        <div className="border-t border-zinc-800 pt-3 space-y-2">
-          {sortedCommands.map((cmd, idx) => (
-            <CommandBlock
-              key={cmd.id}
-              command={cmd}
-              readOnly={readOnly}
-              isFirst={idx === 0}
-              isLast={idx === sortedCommands.length - 1}
-              onEdit={() => onEditCommand?.(cmd)}
-              onDelete={() => onDeleteCommand?.(cmd.id)}
-              onReorder={(dir) => onReorderCommand?.(cmd.id, dir)}
-            />
-          ))}
-        </div>
+      {/* Commands */}
+      <div className="px-5 py-4 space-y-3">
+        {sortedCommands.map((cmd, idx) => (
+          <CommandBlock
+            key={cmd.id}
+            command={cmd}
+            readOnly={readOnly}
+            isFirst={idx === 0}
+            isLast={idx === sortedCommands.length - 1}
+            onEdit={() => onEditCommand?.(cmd)}
+            onDelete={() => onDeleteCommand?.(cmd.id)}
+            onReorder={(dir) => onReorderCommand?.(cmd.id, dir)}
+          />
+        ))}
 
         {!readOnly && (
-          <Button variant="ghost" size="sm" onClick={onAddCommand} className="w-full mt-2">
+          <Button variant="ghost" size="sm" onClick={onAddCommand} className="w-full mt-1">
             <Plus className="h-3.5 w-3.5" />
             Add Command
           </Button>
