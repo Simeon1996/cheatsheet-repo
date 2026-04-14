@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -10,7 +10,7 @@ import Button from "@/components/ui/Button";
 import { Terminal } from "lucide-react";
 import toast from "react-hot-toast";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
@@ -46,52 +46,60 @@ export default function LoginPage() {
   };
 
   return (
+    <div className="w-full max-w-sm">
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center justify-center rounded-full bg-indigo-500/10 p-3 mb-4">
+          <Terminal className="h-6 w-6 text-indigo-400" />
+        </div>
+        <h1 className="text-2xl font-bold text-zinc-100">Welcome back</h1>
+        <p className="mt-2 text-sm text-zinc-400">
+          Sign in to your cheatsheet workspace
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          required
+        />
+        <Input
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
+          required
+        />
+        <Button type="submit" loading={loading} className="w-full">
+          Sign In
+        </Button>
+      </form>
+
+      <p className="mt-6 text-center text-sm text-zinc-400">
+        Don&apos;t have an account?{" "}
+        <Link
+          href="/register"
+          className="text-indigo-400 hover:text-indigo-300 transition-colors"
+        >
+          Create one
+        </Link>
+      </p>
+    </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex flex-1 items-center justify-center px-4">
-        <div className="w-full max-w-sm">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center rounded-full bg-indigo-500/10 p-3 mb-4">
-              <Terminal className="h-6 w-6 text-indigo-400" />
-            </div>
-            <h1 className="text-2xl font-bold text-zinc-100">Welcome back</h1>
-            <p className="mt-2 text-sm text-zinc-400">
-              Sign in to your cheatsheet workspace
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-            />
-            <Input
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-            />
-            <Button type="submit" loading={loading} className="w-full">
-              Sign In
-            </Button>
-          </form>
-
-          <p className="mt-6 text-center text-sm text-zinc-400">
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/register"
-              className="text-indigo-400 hover:text-indigo-300 transition-colors"
-            >
-              Create one
-            </Link>
-          </p>
-        </div>
+        <Suspense>
+          <LoginForm />
+        </Suspense>
       </main>
     </div>
   );
