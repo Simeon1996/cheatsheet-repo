@@ -3,8 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-// BUG-4: imageUrl validation pattern
-const IMAGE_URL_PATTERN = /^\/uploads\/[a-f0-9-]+\.(jpg|jpeg|png|gif|webp)$/;
+const IMAGE_URL_PATTERN = /^\/api\/images\?url=https%3A%2F%2F[A-Za-z0-9._~:@!$&'()*+,;=%-]+$/;
 
 function isValidImageUrl(url: unknown): boolean {
   if (url === null || url === undefined) return true;

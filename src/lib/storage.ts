@@ -6,8 +6,10 @@ export async function uploadFile(
   mimeType: string
 ): Promise<string> {
   const blob = await put(filename, buffer, {
-    access: "public",
+    access: "private",
     contentType: mimeType,
   });
-  return blob.url;
+  // Return a proxy path so the DB never stores a Vercel-specific URL.
+  // The /api/images route resolves this to a fresh signed download URL.
+  return `/api/images?url=${encodeURIComponent(blob.url)}`;
 }
