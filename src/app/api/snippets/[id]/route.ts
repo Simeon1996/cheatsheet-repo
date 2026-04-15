@@ -3,14 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-const IMAGE_URL_PATTERN = /^\/api\/images\?url=https%3A%2F%2F[A-Za-z0-9._~:@!$&'()*+,;=%-]+$/;
-
-function isValidImageUrl(url: unknown): boolean {
-  if (url === null || url === undefined) return true;
-  if (typeof url !== "string") return false;
-  return IMAGE_URL_PATTERN.test(url);
-}
-
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -61,15 +53,7 @@ export async function PUT(
   }
 
   const body = await req.json();
-  const { title, description, imageUrl } = body;
-
-  // BUG-4: Validate imageUrl
-  if (!isValidImageUrl(imageUrl)) {
-    return NextResponse.json(
-      { error: "Invalid imageUrl format" },
-      { status: 400 }
-    );
-  }
+  const { title, description } = body;
 
   // WARN-8: Max length checks
   if (title !== undefined && (typeof title !== "string" || title.length > 200)) {
@@ -84,7 +68,6 @@ export async function PUT(
     data: {
       ...(title !== undefined && { title }),
       ...(description !== undefined && { description }),
-      ...(imageUrl !== undefined && { imageUrl }),
     },
     include: {
       commands: { orderBy: { order: "asc" } },

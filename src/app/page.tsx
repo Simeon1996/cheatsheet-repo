@@ -7,7 +7,6 @@ import {
   Terminal,
   Copy,
   FolderOpen,
-  Sparkles,
   Shield,
   Zap,
 } from "lucide-react";
@@ -26,12 +25,6 @@ const FEATURES = [
     title: "One-Click Copy",
     description:
       "Copy any command to your clipboard instantly. No more digging through docs or history.",
-  },
-  {
-    icon: Sparkles,
-    title: "AI Assistant",
-    description:
-      "Let AI generate entire cheatsheets for you. Just describe what you need and it creates organized snippets.",
   },
   {
     icon: Shield,
@@ -187,7 +180,17 @@ export default function HomePage() {
       </main>
 
       <footer className="border-t border-zinc-800 py-6 text-center text-sm text-zinc-500">
-        Built by <a href="https://simeonivanov.dev" className="underline">simeon.dev</a>
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          <span>
+            Built by{" "}
+            <a href="https://simeonivanov.dev" className="underline hover:text-zinc-300 transition-colors">
+              simeon.dev
+            </a>
+          </span>
+          <Link href="/privacy" className="hover:text-zinc-300 transition-colors">Privacy</Link>
+          <Link href="/terms" className="hover:text-zinc-300 transition-colors">Terms</Link>
+          <Link href="/security" className="hover:text-zinc-300 transition-colors">Security</Link>
+        </div>
       </footer>
     </div>
   );

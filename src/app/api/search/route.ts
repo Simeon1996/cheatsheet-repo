@@ -34,7 +34,6 @@ export async function GET(req: NextRequest) {
       id: true,
       title: true,
       description: true,
-      imageUrl: true,
       isPublic: true,
       userId: true,
       category: { select: { id: true, name: true, icon: true } },

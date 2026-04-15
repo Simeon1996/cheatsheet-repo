@@ -12,7 +12,6 @@ export interface SearchSnippet {
   id: string;
   title: string;
   description: string | null;
-  imageUrl: string | null;
   isPublic: boolean;
   userId?: string | null;
   category: { id: string; name: string; icon: string | null };

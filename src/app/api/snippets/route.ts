@@ -3,14 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-const IMAGE_URL_PATTERN = /^\/api\/images\?url=https%3A%2F%2F[A-Za-z0-9._~:@!$&'()*+,;=%-]+$/;
-
-function isValidImageUrl(url: unknown): boolean {
-  if (url === null || url === undefined) return true;
-  if (typeof url !== "string") return false;
-  return IMAGE_URL_PATTERN.test(url);
-}
-
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   const categoryId = req.nextUrl.searchParams.get("categoryId");
@@ -45,7 +37,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { title, description, imageUrl, categoryId, commands } = body;
+  const { title, description, categoryId, commands } = body;
 
   if (!title || !categoryId) {
     return NextResponse.json(
@@ -58,14 +50,6 @@ export async function POST(req: NextRequest) {
   if (typeof title !== "string" || title.length > 200) {
     return NextResponse.json(
       { error: "Title must be a string of at most 200 characters" },
-      { status: 400 }
-    );
-  }
-
-  // BUG-4: Validate imageUrl
-  if (!isValidImageUrl(imageUrl)) {
-    return NextResponse.json(
-      { error: "Invalid imageUrl format" },
       { status: 400 }
     );
   }
@@ -86,7 +70,6 @@ export async function POST(req: NextRequest) {
     data: {
       title,
       description: description || null,
-      imageUrl: imageUrl || null,
       categoryId,
       userId: session.user.id,
       isPublic: false,

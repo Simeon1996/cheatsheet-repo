@@ -134,7 +134,6 @@ export default function WorkspacePage() {
   const handleSaveSnippet = async (data: {
     title: string;
     description: string;
-    imageUrl: string | null;
   }) => {
     if (editingSnippet) {
       const res = await fetch(`/api/snippets/${editingSnippet.id}`, {
@@ -477,7 +476,7 @@ export default function WorkspacePage() {
           setEditingSnippet(null);
         }}
         onSave={handleSaveSnippet}
-        initial={editingSnippet || undefined}
+        initial={editingSnippet ? { title: editingSnippet.title, description: editingSnippet.description } : undefined}
       />
 
       <CommandModal

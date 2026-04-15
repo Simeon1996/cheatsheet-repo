@@ -8,7 +8,6 @@ export interface SnippetData {
   id: string;
   title: string;
   description: string | null;
-  imageUrl: string | null;
   isPublic: boolean;
   commands: CommandData[];
 }
@@ -69,16 +68,6 @@ export default function SnippetCard({
           </div>
         )}
       </div>
-
-      {snippet.imageUrl && (
-        <div className="px-5 py-3">
-          <img
-            src={snippet.imageUrl}
-            alt={snippet.title}
-            className="rounded-lg border border-zinc-800 max-h-48 object-cover"
-          />
-        </div>
-      )}
 
       {/* Commands */}
       <div className="px-4 sm:px-5 py-4 space-y-3">

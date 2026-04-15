@@ -62,7 +62,6 @@ export default async function ExplorePage({ searchParams }: Props) {
             id: true,
             title: true,
             description: true,
-            imageUrl: true,
             isPublic: true,
             commands: {
               select: {
