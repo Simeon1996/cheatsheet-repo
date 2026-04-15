@@ -7,7 +7,6 @@ import Navbar from "@/components/Navbar";
 import CategorySidebar, { CategoryData } from "@/components/CategorySidebar";
 import SnippetCard, { SnippetData } from "@/components/SnippetCard";
 import { CommandData } from "@/components/CommandBlock";
-import AssistantWidget from "@/components/AssistantWidget";
 import CategoryModal from "@/components/modals/CategoryModal";
 import SnippetModal from "@/components/modals/SnippetModal";
 import CommandModal from "@/components/modals/CommandModal";
@@ -232,59 +231,6 @@ export default function WorkspacePage() {
     }
 
     if (selectedCategoryId) fetchSnippets(selectedCategoryId);
-  };
-
-  // AI Action handler
-  const handleAIAction = async (action: {
-    categoryName: string;
-    title: string;
-    description?: string;
-    commands: { label?: string; content: string; language?: string }[];
-  }) => {
-    let targetCategoryId = selectedCategoryId;
-
-    // Find or create the category
-    const existingCat = categories.find(
-      (c) => c.name.toLowerCase() === action.categoryName.toLowerCase()
-    );
-
-    if (existingCat) {
-      targetCategoryId = existingCat.id;
-    } else {
-      const res = await fetch("/api/categories", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: action.categoryName,
-          icon: "🤖",
-          color: "purple",
-          description: `AI-generated category`,
-        }),
-      });
-      if (!res.ok) throw new Error("Failed to create category");
-      const newCat = await res.json();
-      targetCategoryId = newCat.id;
-      await fetchCategories();
-    }
-
-    if (!targetCategoryId) throw new Error("No category");
-
-    const res = await fetch("/api/snippets", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: action.title,
-        description: action.description || null,
-        categoryId: targetCategoryId,
-        commands: action.commands,
-      }),
-    });
-
-    if (!res.ok) throw new Error("Failed to create snippet");
-
-    setSelectedCategoryId(targetCategoryId);
-    fetchSnippets(targetCategoryId);
-    fetchCategories();
   };
 
   if (status === "loading") {
@@ -545,7 +491,6 @@ export default function WorkspacePage() {
         initial={editingCommand || undefined}
       />
 
-      <AssistantWidget onActionCreate={handleAIAction} />
     </div>
   );
 }
