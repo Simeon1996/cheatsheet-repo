@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Ansible", userId: admin.id },
+    where: { name: "Ansible", userId: null },
   });
 
   const ansible = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "⚙️",
       color: "red",
       description: "Ansible CLI commands and playbook patterns for configuration management and automation",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Ad-hoc Commands",
             description: "Run one-off tasks against hosts without writing a playbook",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -55,7 +42,6 @@ async function main() {
           {
             title: "Inventory",
             description: "Define and inspect static and dynamic inventories",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -103,7 +89,6 @@ hostnames:
           {
             title: "Running Playbooks",
             description: "Execute, test and control playbook runs",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -127,7 +112,6 @@ hostnames:
           {
             title: "Playbook Patterns",
             description: "Common playbook structures and task idioms",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -243,7 +227,6 @@ hostnames:
           {
             title: "Variables & Jinja2 Templates",
             description: "Variable precedence, filters and Jinja2 template patterns",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -316,7 +299,6 @@ db_password: !vault |
           {
             title: "Ansible Vault",
             description: "Encrypt and manage secrets in playbooks and var files",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -336,7 +318,6 @@ db_password: !vault |
           {
             title: "Roles",
             description: "Create, structure and reuse Ansible roles",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -391,7 +372,6 @@ collections:
           {
             title: "Collections & Galaxy",
             description: "Install and manage Ansible collections",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -409,7 +389,6 @@ collections:
           {
             title: "Debugging & Testing",
             description: "Lint, debug and test playbooks and roles",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

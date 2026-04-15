@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "MongoDB", userId: admin.id },
+    where: { name: "MongoDB", userId: null },
   });
 
   const mongo = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🍃",
       color: "green",
       description: "MongoDB shell and driver commands — CRUD, aggregation pipeline, indexes, transactions and Atlas Search",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Shell & Database Setup",
             description: "Connect, switch databases, inspect collections and stats",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -94,7 +81,6 @@ db.users.validate({ full: true })`,
           {
             title: "CRUD — Create",
             description: "Insert single and multiple documents",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -129,7 +115,6 @@ db.products.insertMany([
           {
             title: "CRUD — Read",
             description: "find, projection, sort, limit and query operators",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -231,7 +216,6 @@ db.orders.find({
           {
             title: "CRUD — Update",
             description: "updateOne, updateMany, findOneAndUpdate and update operators",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -350,7 +334,6 @@ db.orders.updateMany(
           {
             title: "CRUD — Delete",
             description: "deleteOne, deleteMany and bulk operations",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -395,7 +378,6 @@ db.products.bulkWrite([
           {
             title: "Aggregation Pipeline",
             description: "$match, $group, $lookup, $project, $unwind and more",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -580,7 +562,6 @@ db.orders.aggregate([
           {
             title: "Indexes",
             description: "Create, inspect and manage indexes for performance",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -660,7 +641,6 @@ db.orders.find({ userId: "u123" }).hint({ $natural: 1 })`,
           {
             title: "Transactions",
             description: "Multi-document ACID transactions across collections",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -757,7 +737,6 @@ async function transferFunds(fromId, toId, amount) {
           {
             title: "Node.js Driver Patterns",
             description: "Connect, query and manage collections from Node.js",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -845,7 +824,6 @@ const results = await db.collection("users")
           {
             title: "Useful Patterns",
             description: "Geospatial, full-text search, Change Streams and schema validation",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

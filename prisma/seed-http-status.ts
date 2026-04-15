@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "HTTP Status Codes", userId: admin.id },
+    where: { name: "HTTP Status Codes", userId: null },
   });
 
   const http = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🌐",
       color: "blue",
       description: "Complete HTTP status code reference: 1xx informational, 2xx success, 3xx redirection, 4xx client errors, and 5xx server errors with use cases and examples",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "1xx — Informational",
             description: "Provisional responses indicating the request was received and processing continues",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -68,7 +55,6 @@ async function main() {
           {
             title: "2xx — Success",
             description: "The request was successfully received, understood, and accepted",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -128,7 +114,6 @@ async function main() {
           {
             title: "3xx — Redirection",
             description: "Further action is needed to complete the request; client must follow redirect",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -202,7 +187,6 @@ CACHE HEADERS THAT TRIGGER 304
           {
             title: "4xx — Client Errors",
             description: "The request contains bad syntax or cannot be fulfilled by the server",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -371,7 +355,6 @@ CACHE HEADERS THAT TRIGGER 304
           {
             title: "5xx — Server Errors",
             description: "The server failed to fulfil a valid request",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -459,7 +442,6 @@ CIRCUIT BREAKER PATTERN
           {
             title: "Status Codes & Caching",
             description: "Which status codes are cacheable, Cache-Control, ETags, and Vary",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -529,7 +511,6 @@ VARY HEADER  (tell caches which request headers affect the response)
           {
             title: "REST API Status Code Conventions",
             description: "Recommended status codes for standard CRUD operations and common API patterns",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -626,7 +607,6 @@ ASYNC / LONG-RUNNING JOBS
           {
             title: "Non-Standard & Vendor Codes",
             description: "Cloudflare, Nginx, IIS, and other vendor-specific codes you may encounter in logs",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

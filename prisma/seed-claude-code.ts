@@ -3,18 +3,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      email: "admin@cheatsheet.dev",
-      name: "Admin",
-      hashedPassword: "not-a-real-password",
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Claude Code", userId: admin.id },
+    where: { name: "Claude Code", userId: null },
   });
 
   const result = await prisma.category.create({
@@ -23,14 +14,12 @@ async function main() {
       icon: "🤖",
       color: "violet",
       description: "Claude Code CLI reference: slash commands, keyboard shortcuts, permissions, hooks, CLAUDE.md, MCP, and settings.",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
           {
             title: "CLI Flags & Invocation",
             description: "Core flags for invoking Claude Code from the terminal.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -126,7 +115,6 @@ claude --settings .claude/custom-settings.json`,
           {
             title: "Slash Commands",
             description: "Interactive commands typed during a Claude Code session.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -167,7 +155,6 @@ TIP: Type / alone to see all commands with fuzzy filtering.
           {
             title: "Keyboard Shortcuts",
             description: "Keyboard shortcuts available in interactive Claude Code sessions.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -221,7 +208,6 @@ VOICE INPUT
           {
             title: "CLAUDE.md — Persistent Instructions",
             description: "How CLAUDE.md files work, where they live, and what to put in them.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -287,7 +273,6 @@ GENERATE IT
           {
             title: "Permissions System",
             description: "How to allow, ask, and deny tool usage — patterns and permission modes.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -349,7 +334,6 @@ SET IN SETTINGS
           {
             title: "Hooks",
             description: "Lifecycle hooks that run before/after tool calls to enforce policies or trigger side effects.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -443,7 +427,6 @@ exit 0  # Allow`,
           {
             title: "MCP — Model Context Protocol",
             description: "Connecting external tools and data sources via MCP servers.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -521,7 +504,6 @@ ENVIRONMENT VARIABLES IN MCP CONFIG
           {
             title: "Settings & Environment Variables",
             description: "settings.json fields and environment variables that control Claude Code behaviour.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -612,7 +594,6 @@ CLAUDE_CODE_SHELL                     Override shell detection`,
           {
             title: "Auto Memory System",
             description: "How Claude Code automatically remembers project context across sessions.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -689,7 +670,6 @@ MEMORY TYPES CLAUDE USES
           {
             title: "Non-Interactive & Scripting",
             description: "Using Claude Code in scripts, CI pipelines, and programmatic workflows.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -747,7 +727,6 @@ claude -p "run tests and fix failures" \
           {
             title: "Tips & Best Practices",
             description: "Practical tips to get the most out of Claude Code.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

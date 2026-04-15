@@ -3,18 +3,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      email: "admin@cheatsheet.dev",
-      name: "Admin",
-      hashedPassword: "not-a-real-password",
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Agentic AI Tools", userId: admin.id },
+    where: { name: "Agentic AI Tools", userId: null },
   });
 
   const result = await prisma.category.create({
@@ -23,14 +14,12 @@ async function main() {
       icon: "🧠",
       color: "purple",
       description: "Agentic AI reference: tool use API, ReAct loop, LangGraph, OpenAI Agents SDK, AutoGen, CrewAI, memory patterns, and observability.",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
           {
             title: "Core Agentic Concepts",
             description: "What makes a system agentic and the vocabulary shared across frameworks.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -69,7 +58,6 @@ COMMON PATTERNS
           {
             title: "Anthropic Tool Use API",
             description: "Defining tools, the agentic loop, parallel calls, and tool_choice in the Messages API.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -216,7 +204,6 @@ response = client.beta.messages.create(
           {
             title: "LangGraph",
             description: "Graph-based agent orchestration with stateful nodes, conditional edges, and checkpointing.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -323,7 +310,6 @@ app.invoke(None, config)   # resume from checkpoint`,
           {
             title: "OpenAI Agents SDK",
             description: "High-level agent primitives: Agent, Runner, tools, handoffs, and guardrails.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -414,7 +400,6 @@ safe_agent = Agent(
           {
             title: "AutoGen / AG2",
             description: "Microsoft's multi-agent conversation framework: agents, tool registration, and GroupChat.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -504,7 +489,6 @@ user_proxy.initiate_chat(manager, message="Write a report on LLM agents in 2025.
           {
             title: "CrewAI",
             description: "Role-based multi-agent framework: Agent, Task, Crew, and Process types.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -608,7 +592,6 @@ result = crew.kickoff(inputs={"company": "Anthropic", "quarter": "Q1 2025"})`,
           {
             title: "Memory Patterns",
             description: "In-context, vector store, episodic, and procedural memory across frameworks.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -699,7 +682,6 @@ crew = Crew(
           {
             title: "Observability & Evaluation",
             description: "Tracing, debugging, and evaluating agentic workflows with LangSmith, Weave, and OpenTelemetry.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -794,7 +776,6 @@ AnthropicInstrumentor().instrument()   # auto-traces all Anthropic calls`,
           {
             title: "Tool Design Best Practices",
             description: "How to write tools that models use reliably and safely.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

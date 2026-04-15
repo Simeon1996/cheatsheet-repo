@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Linux", userId: admin.id },
+    where: { name: "Linux", userId: null },
   });
 
   const linux = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🐧",
       color: "orange",
       description: "Essential Linux commands for file management, permissions, processes, networking, disk usage, users, and system administration",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "File & Directory Operations",
             description: "Navigation, listing, creating, copying, moving, and finding files",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -76,7 +63,6 @@ type bash                               # type info (alias/builtin/file)`,
           {
             title: "File Content & Text Processing",
             description: "cat, less, head, tail, grep, awk, sed, sort, cut and other text tools",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -117,7 +103,6 @@ diff a.txt b.txt               # show differences`,
           {
             title: "Permissions & Ownership",
             description: "chmod, chown, setuid/setgid/sticky bits, ACLs, and umask",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -162,7 +147,6 @@ umask 027                      # new files: 640, dirs: 750`,
           {
             title: "Process Management",
             description: "ps, kill, background jobs, nice/renice, lsof, and strace",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -207,7 +191,6 @@ watch -n 2 'ps aux | grep app'  # repeat every 2s`,
           {
             title: "Disk & Storage",
             description: "df, du, lsblk, mount/umount, fdisk, LVM, and filesystem tools",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -251,7 +234,6 @@ lvremove /dev/vg0/lv_data             # remove LV`,
           {
             title: "Networking",
             description: "ip, ping, dig, ss/netstat, curl, scp, rsync, and ufw",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -302,7 +284,6 @@ ufw disable`,
           {
             title: "Users & Groups",
             description: "whoami, id, useradd/usermod/userdel, groups, sudo, and su",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -348,7 +329,6 @@ su -                                 # switch to root`,
           {
             title: "System Info & Logs",
             description: "uname, lscpu, free, systemctl, journalctl, and system logs",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -392,7 +372,6 @@ hwclock                            # hardware clock`,
           {
             title: "Shell Productivity & Scripting",
             description: "History tricks, redirection, pipes, variables, loops, and useful aliases",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -444,7 +423,6 @@ export PATH="$PATH:/usr/local/bin"`,
           {
             title: "Archives & Package Management",
             description: "tar, zip, apt, dnf/yum, dpkg/rpm, snap and flatpak",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

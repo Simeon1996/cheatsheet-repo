@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "CSS Grid", userId: admin.id },
+    where: { name: "CSS Grid", userId: null },
   });
 
   const grid = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🔲",
       color: "indigo",
       description: "Complete CSS Grid reference — tracks, placement, alignment, template areas and real-world layout patterns",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Defining the Grid",
             description: "Set up columns, rows and track sizes",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -135,7 +122,6 @@ async function main() {
           {
             title: "Template Areas",
             description: "Name regions of the grid for readable layouts",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -194,7 +180,6 @@ async function main() {
           {
             title: "Item Placement",
             description: "Place and span items across specific grid lines and cells",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -250,7 +235,6 @@ async function main() {
           {
             title: "Alignment",
             description: "Align the grid and items within their cells",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -327,7 +311,6 @@ async function main() {
           {
             title: "Layout Patterns",
             description: "Battle-tested grid recipes for real interfaces",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -461,7 +444,6 @@ async function main() {
           {
             title: "Subgrid",
             description: "Let nested elements participate in the parent grid",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -515,7 +497,6 @@ async function main() {
           {
             title: "Gotchas & Tips",
             description: "Grid edge cases, browser quirks and practical tips",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

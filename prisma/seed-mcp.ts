@@ -3,18 +3,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      email: "admin@cheatsheet.dev",
-      name: "Admin",
-      hashedPassword: "not-a-real-password",
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "MCP (Model Context Protocol)", userId: admin.id },
+    where: { name: "MCP (Model Context Protocol)", userId: null },
   });
 
   const result = await prisma.category.create({
@@ -23,14 +14,12 @@ async function main() {
       icon: "🔌",
       color: "cyan",
       description: "Model Context Protocol reference: architecture, primitives, server config, building servers, tools/resources/prompts, transports, auth, and debugging.",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
           {
             title: "Protocol Overview & Architecture",
             description: "What MCP is, how clients and servers relate, and the two transport types.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -70,7 +59,6 @@ TRANSPORT OPTIONS
           {
             title: "MCP Primitives",
             description: "The five building blocks servers and clients expose: Tools, Resources, Prompts, Sampling, and Roots.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -109,7 +97,6 @@ Roots       Client tells server which filesystem roots it may access
           {
             title: "Server Configuration",
             description: "JSON config format for Claude Desktop, Claude Code, and other MCP clients.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -178,7 +165,6 @@ VS Code / Cursor    .vscode/mcp.json  or workspace settings`,
           {
             title: "Building an MCP Server — TypeScript",
             description: "Creating an MCP server with the official TypeScript SDK.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -281,7 +267,6 @@ app.listen(3000);`,
           {
             title: "Building an MCP Server — Python",
             description: "Creating an MCP server with the official Python SDK using FastMCP.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -352,7 +337,6 @@ if __name__ == "__main__":
           {
             title: "Tool Definition Deep-Dive",
             description: "How to define tools with JSON Schema input validation and proper return types.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -406,7 +390,6 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
           {
             title: "Resources & Prompts",
             description: "Defining static and dynamic resources, and reusable prompt templates.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -484,7 +467,6 @@ server.resource(
           {
             title: "Transport Types",
             description: "stdio vs Streamable HTTP — when to use each and how they work.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -554,7 +536,6 @@ mcp.run(transport="streamable-http")    # HTTP`,
           {
             title: "Authentication & Security",
             description: "How auth works with MCP servers and key security considerations.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -623,7 +604,6 @@ function isSafeUrl(url: string): boolean {
           {
             title: "Notable MCP Servers",
             description: "Official and community MCP servers worth knowing about.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -679,7 +659,6 @@ DISCOVERY
           {
             title: "Debugging & Testing",
             description: "MCP Inspector, log locations, and common errors.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

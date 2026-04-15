@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "ML Formulas", userId: admin.id },
+    where: { name: "ML Formulas", userId: null },
   });
 
   const ml = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🧮",
       color: "purple",
       description: "Core machine learning formulas: loss functions, activation functions, regularisation, optimisers, metrics, probability, and neural network building blocks",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Loss Functions",
             description: "MSE, MAE, Huber, cross-entropy, hinge, KL divergence, and their gradients",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -128,7 +115,6 @@ def contrastive(d, y, margin=1.0):
           {
             title: "Activation Functions",
             description: "Sigmoid, tanh, ReLU variants, softmax, and their derivatives",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -203,7 +189,6 @@ def mish(x):  return x * np.tanh(np.log1p(np.exp(x)))`,
           {
             title: "Optimisers",
             description: "SGD, Momentum, RMSProp, Adam, AdamW, and learning rate schedules",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -311,7 +296,6 @@ def cyclical_lr(t, step_size, lr_min=1e-4, lr_max=1e-2):
           {
             title: "Regularisation",
             description: "L1/L2, elastic net, dropout, batch normalisation, and early stopping",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -378,7 +362,6 @@ def layer_norm(x, gamma, beta, eps=1e-5):
           {
             title: "Evaluation Metrics",
             description: "Classification, regression, ranking, and clustering metrics",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -468,7 +451,6 @@ def ndcg(relevance, k=None):
           {
             title: "Probability & Statistics",
             description: "Bayes' theorem, distributions, MLE, MAP, and information theory",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -537,7 +519,6 @@ def perplexity(log_probs):
           {
             title: "Neural Network Building Blocks",
             description: "Forward pass, backpropagation, weight init, and attention mechanism",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -641,7 +622,6 @@ def multi_head_attention(Q, K, V, W_Q, W_K, W_V, W_O, num_heads):
           {
             title: "Similarity & Distance",
             description: "Euclidean, cosine, Mahalanobis, Hamming, and kernel functions",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -715,7 +695,6 @@ def sigmoid_kernel(a, b, alpha=0.01, c=0):
           {
             title: "Classic Algorithm Formulas",
             description: "Linear/logistic regression, SVM, k-means, PCA, and naive Bayes",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -788,7 +767,6 @@ def kmeans(X, k, max_iter=100, seed=42):
           {
             title: "Gradient Computation",
             description: "Numerical gradients, gradient clipping, vanishing/exploding detection",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

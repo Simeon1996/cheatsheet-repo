@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "GKE CLI", userId: admin.id },
+    where: { name: "GKE CLI", userId: null },
   });
 
   const gke = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🚀",
       color: "blue",
       description: "gcloud and kubectl commands for Google Kubernetes Engine — clusters, workloads, networking, and operations",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Auth & Project Setup",
             description: "Authenticate and configure gcloud before anything else",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -52,7 +39,6 @@ async function main() {
           {
             title: "Cluster Management",
             description: "Create, resize, upgrade and delete GKE clusters",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -84,7 +70,6 @@ async function main() {
           {
             title: "Node Pools",
             description: "Add, scale and manage node pools within a cluster",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -115,7 +100,6 @@ async function main() {
           {
             title: "kubectl Essentials",
             description: "Everyday kubectl commands for GKE workloads",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -141,7 +125,6 @@ async function main() {
           {
             title: "Workload Identity",
             description: "Bind Kubernetes service accounts to Google IAM roles — the secure way to access GCP services from pods",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -174,7 +157,6 @@ async function main() {
           {
             title: "Networking & Ingress",
             description: "Manage GKE services, load balancers and GKE Gateway",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -193,7 +175,6 @@ async function main() {
           {
             title: "Artifact Registry",
             description: "Push and pull container images using Google Artifact Registry",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -212,7 +193,6 @@ docker push <region>-docker.pkg.dev/<project-id>/<repo>/<image>:<tag>` },
           {
             title: "Logging & Monitoring",
             description: "Query Cloud Logging and inspect cluster metrics from the CLI",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -240,7 +220,6 @@ docker push <region>-docker.pkg.dev/<project-id>/<repo>/<image>:<tag>` },
           {
             title: "Debugging & Troubleshooting",
             description: "Diagnose failing pods, OOMKills, and cluster issues",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

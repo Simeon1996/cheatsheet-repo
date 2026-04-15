@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "OWASP Top 10", userId: admin.id },
+    where: { name: "OWASP Top 10", userId: null },
   });
 
   const owasp = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🔐",
       color: "red",
       description: "OWASP Top 10 (2021) web application security risks: descriptions, attack examples, vulnerable code patterns, and concrete defences",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "A01 — Broken Access Control",
             description: "Enforcing restrictions on authenticated users — the most common critical vulnerability",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -109,7 +96,6 @@ app.post("/api/promote", authenticate, requireRole("admin"), async (req, res) =>
           {
             title: "A02 — Cryptographic Failures",
             description: "Failures related to cryptography exposing sensitive data in transit or at rest",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -185,7 +171,6 @@ ciphertext, tag = cipher.encrypt_and_digest(plaintext)`,
           {
             title: "A03 — Injection",
             description: "SQL, NoSQL, OS command, LDAP injection — untrusted data sent to an interpreter",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -268,7 +253,6 @@ def login(username: str, password: str):
           {
             title: "A04 — Insecure Design",
             description: "Missing or ineffective security controls due to flaws in design, not implementation",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -313,7 +297,6 @@ DEFENCES
           {
             title: "A05 — Security Misconfiguration",
             description: "Missing hardening, unnecessary features enabled, default credentials, verbose errors",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -390,7 +373,6 @@ aws ec2 describe-security-groups --query \
           {
             title: "A06 — Vulnerable & Outdated Components",
             description: "Using components with known vulnerabilities in libraries, frameworks, and dependencies",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -471,7 +453,6 @@ snyk monitor`,
           {
             title: "A07 — Identification & Authentication Failures",
             description: "Weaknesses in authentication, session management, and credential handling",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -560,7 +541,6 @@ app.use(session({
           {
             title: "A08 — Software & Data Integrity Failures",
             description: "Insecure CI/CD pipelines, unsigned updates, insecure deserialisation",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -628,7 +608,6 @@ DEFENCES
           {
             title: "A09 — Security Logging & Monitoring Failures",
             description: "Insufficient logging, monitoring, and alerting that allows breaches to go undetected",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -728,7 +707,6 @@ app.use((req, res, next) => {
           {
             title: "A10 — Server-Side Request Forgery (SSRF)",
             description: "Server fetches a remote resource using attacker-controlled URL",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -820,7 +798,6 @@ def is_safe_ip(hostname: str) -> bool:
           {
             title: "Cross-Site Scripting (XSS)",
             description: "Reflected, stored, and DOM-based XSS — injecting scripts into web pages",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Python", userId: admin.id },
+    where: { name: "Python", userId: null },
   });
 
   const py = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🐍",
       color: "green",
       description: "Python syntax, built-ins, data structures, file I/O, concurrency and tooling",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Data Structures",
             description: "Lists, dicts, sets, tuples and common operations",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -133,7 +120,6 @@ p.x, p.y`,
           {
             title: "Comprehensions & Itertools",
             description: "Concise data transformations and lazy iteration",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -217,7 +203,6 @@ def my_decorator(func):
           {
             title: "Functions & Decorators",
             description: "Args, kwargs, closures, decorators and type hints",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -318,7 +303,6 @@ def process(
           {
             title: "OOP & Classes",
             description: "Classes, inheritance, dunder methods and protocols",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -456,7 +440,6 @@ isinstance(Canvas(), Drawable)  # True`,
           {
             title: "Error Handling",
             description: "try/except patterns, custom exceptions and context managers",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -554,7 +537,6 @@ with suppress(FileNotFoundError):
           {
             title: "File I/O & Paths",
             description: "Read, write and navigate files with pathlib and built-ins",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -654,7 +636,6 @@ port    = int(os.getenv("PORT", "8080"))`,
           {
             title: "Concurrency",
             description: "asyncio, threading, multiprocessing and concurrent.futures",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -754,7 +735,6 @@ with ProcessPoolExecutor() as pool:
           {
             title: "Testing with pytest",
             description: "Fixtures, parametrize, mocking and coverage",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -844,7 +824,6 @@ async def test_async_service():
           {
             title: "Tooling & Packaging",
             description: "uv, pip, venv, pyproject.toml and linting",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -948,7 +927,6 @@ ruff format --check .           # check without changing
           {
             title: "Useful Built-ins & Snippets",
             description: "Handy one-liners and patterns that come up constantly",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

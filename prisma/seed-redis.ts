@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Redis", userId: admin.id },
+    where: { name: "Redis", userId: null },
   });
 
   const redis = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "⚡",
       color: "red",
       description: "Redis commands for strings, hashes, lists, sets, sorted sets, streams, pub/sub, transactions and server management",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Connection & Server",
             description: "Connect, authenticate, inspect and manage the Redis server",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -104,7 +91,6 @@ FLUSHALL          # ALL databases — dangerous in production!`,
           {
             title: "Keys",
             description: "Inspect, expire, rename and scan keys",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -181,7 +167,6 @@ ZSCAN  myzset  0 MATCH "a*"                # sorted set members`,
           {
             title: "Strings",
             description: "The fundamental Redis type — text, numbers, serialised JSON",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -246,7 +231,6 @@ INCR visits:page:home    # atomic, race-condition safe`,
           {
             title: "Hashes",
             description: "Store objects as field-value pairs — ideal for user profiles, sessions",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -293,7 +277,6 @@ EXPIRE session:abc 3600`,
           {
             title: "Lists",
             description: "Ordered sequences — queues, stacks, activity feeds",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -338,7 +321,6 @@ BLMOVE source destination LEFT RIGHT 10  # blocking version`,
           {
             title: "Sets",
             description: "Unordered unique collections — tags, followers, online users",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -387,7 +369,6 @@ SDIFFSTORE  dest set1 set2
           {
             title: "Sorted Sets",
             description: "Members with scores — leaderboards, priority queues, rate limiting",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -448,7 +429,6 @@ ZINTERSTORE out 2 zset1 zset2 WEIGHTS 2 1  # weight scores before combining`,
           {
             title: "Pub/Sub & Streams",
             description: "Real-time messaging with pub/sub and persistent event streams",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -531,7 +511,6 @@ XTRIM orders:stream MINID 1713000000000-0   # remove older than timestamp`,
           {
             title: "Transactions & Scripting",
             description: "MULTI/EXEC, WATCH for optimistic locking and Lua scripts",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -614,7 +593,6 @@ SCRIPT FLUSH               # remove all cached scripts`,
           {
             title: "Persistence & Replication",
             description: "RDB snapshots, AOF, replica info and failover",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -675,7 +653,6 @@ CLUSTER GETKEYSINSLOT 0 10   # keys in slot 0`,
           {
             title: "Common Patterns",
             description: "Caching, distributed locks, rate limiting, sessions and leaderboards",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

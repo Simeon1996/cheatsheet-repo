@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Git", userId: admin.id },
+    where: { name: "Git", userId: null },
   });
 
   const git = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🌿",
       color: "orange",
       description: "Git version control: setup, branching, merging, rebasing, remotes, stash, tags, history rewriting, and common workflows",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Setup & Config",
             description: "Initial configuration, aliases, and credential management",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -92,7 +79,6 @@ git remote set-url origin git@github.com:user/repo.git`,
           {
             title: "Basics — Stage, Commit & Undo",
             description: "init, clone, add, commit, reset, restore, and status",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -152,7 +138,6 @@ git revert HEAD              # revert last commit`,
           {
             title: "Branching",
             description: "Create, switch, rename, delete, and list branches",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -201,7 +186,6 @@ git remote prune origin`,
           {
             title: "Merging & Rebasing",
             description: "merge strategies, rebase, cherry-pick, and conflict resolution",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -271,7 +255,6 @@ git checkout --theirs file.txt   # keep their version`,
           {
             title: "Remotes",
             description: "Adding remotes, fetch, pull, push, and tracking branches",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -329,7 +312,6 @@ git push origin main`,
           {
             title: "Stash",
             description: "Save, list, apply, and drop stashed changes",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -365,7 +347,6 @@ git stash branch feature/wip stash@{1}`,
           {
             title: "Log & Diff",
             description: "Inspect history, search commits, compare branches, and blame",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -422,7 +403,6 @@ git bisect reset                # exit bisect mode`,
           {
             title: "Tags",
             description: "Lightweight and annotated tags, listing, pushing, and deleting",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -470,7 +450,6 @@ git checkout -b release/v1 v1.0.0`,
           {
             title: "History Rewriting",
             description: "amend, interactive rebase, filter-branch, and reflog recovery",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -529,7 +508,6 @@ git push origin --force --tags`,
           {
             title: "Workflows & Tips",
             description: "Worktrees, submodules, sparse checkout, and common workflow patterns",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

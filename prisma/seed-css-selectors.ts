@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "CSS Selectors", userId: admin.id },
+    where: { name: "CSS Selectors", userId: null },
   });
 
   const selectors = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🎯",
       color: "orange",
       description: "Every CSS selector type — basic, combinators, attribute, pseudo-classes, pseudo-elements and the new :is() :has() :where() family",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Basic Selectors",
             description: "Type, class, ID, universal and grouping",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -68,7 +55,6 @@ h1, h2, h3,
           {
             title: "Combinators",
             description: "Descendant, child, adjacent sibling and general sibling",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -120,7 +106,6 @@ input:checked ~ .drawer { display: block; }
           {
             title: "Attribute Selectors",
             description: "Target elements by their HTML attributes and values",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -175,7 +160,6 @@ a[href$=".PDF" i] { }  /* matches .pdf .PDF .Pdf */`,
           {
             title: "Pseudo-classes — State",
             description: "User interaction and element state selectors",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -232,7 +216,6 @@ input:placeholder-shown { font-style: italic; }`,
           {
             title: "Pseudo-classes — Structural",
             description: "Select elements by their position in the document tree",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -312,7 +295,6 @@ p:empty     { display: none; }
           {
             title: "Modern Pseudo-classes",
             description: ":is(), :not(), :has(), :where() and :any-link",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -430,7 +412,6 @@ a:visited { color: #551a8b; }`,
           {
             title: "Pseudo-elements",
             description: "Style specific parts of elements with ::before, ::after and friends",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -537,7 +518,6 @@ input[type="file"]::file-selector-button {
           {
             title: "Specificity",
             description: "How browsers decide which rule wins when selectors conflict",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

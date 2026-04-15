@@ -3,18 +3,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      email: "admin@cheatsheet.dev",
-      name: "Admin",
-      hashedPassword: "not-a-real-password",
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Cron Expressions", userId: admin.id },
+    where: { name: "Cron Expressions", userId: null },
   });
 
   const result = await prisma.category.create({
@@ -23,14 +14,12 @@ async function main() {
       icon: "⏰",
       color: "orange",
       description: "Cron syntax, field definitions, special strings, and common schedule patterns for Unix cron, systemd timers, and cloud schedulers.",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
           {
             title: "Cron Field Syntax",
             description: "The five (or six) positional fields that make up a cron expression.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -63,7 +52,6 @@ EXTENDED CRON (6 fields — used by Quartz, AWS, GCP, etc.)
           {
             title: "Special Characters",
             description: "Wildcards, ranges, steps, lists, and platform-specific modifiers.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -98,7 +86,6 @@ NOTES
           {
             title: "Common Schedule Patterns",
             description: "Ready-to-use expressions for the most frequent scheduling needs.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -133,7 +120,6 @@ NOTES
           {
             title: "Special Strings (@reboot, @daily …)",
             description: "Named shortcuts supported by Vixie cron and many modern implementations.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -167,7 +153,6 @@ NOTES
           {
             title: "systemd OnCalendar Syntax",
             description: "systemd timer calendar expressions — an alternative to traditional cron.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -206,7 +191,6 @@ USEFUL COMMANDS
           {
             title: "Cloud Scheduler Syntax",
             description: "Cron expression formats for AWS EventBridge, GCP Cloud Scheduler, and Azure Logic Apps.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -265,7 +249,6 @@ USEFUL COMMANDS
           {
             title: "Crontab Commands",
             description: "Managing user and system crontabs from the command line.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -333,7 +316,6 @@ MAILTO=admin@example.com
           {
             title: "Cron Expression Examples by Use Case",
             description: "Real-world scheduling patterns grouped by common DevOps and application needs.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -374,7 +356,6 @@ Off-hours batch job             0 0-6 * * *  (every hour midnight–6 AM)`,
           {
             title: "Gotchas & Best Practices",
             description: "Common mistakes, edge cases, and tips for writing reliable cron jobs.",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

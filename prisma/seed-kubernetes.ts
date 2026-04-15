@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Kubernetes", userId: admin.id },
+    where: { name: "Kubernetes", userId: null },
   });
 
   const k8s = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "⎈",
       color: "blue",
       description: "kubectl commands and YAML patterns for pods, deployments, services, networking, RBAC and cluster operations",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Context & Cluster",
             description: "Switch clusters, set defaults and inspect nodes",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -57,7 +44,6 @@ async function main() {
           {
             title: "Namespaces",
             description: "Create and manage namespaces",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -81,7 +67,6 @@ metadata:
           {
             title: "Pods",
             description: "Run, inspect, debug and delete pods",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -107,7 +92,6 @@ metadata:
           {
             title: "Deployments",
             description: "Deploy, scale, update and roll back applications",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -191,7 +175,6 @@ spec:
           {
             title: "Services & Ingress",
             description: "Expose workloads internally and externally",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -247,7 +230,6 @@ spec:
           {
             title: "ConfigMaps & Secrets",
             description: "Inject configuration and sensitive data into workloads",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -300,7 +282,6 @@ spec:
           {
             title: "Autoscaling",
             description: "HPA, VPA and cluster autoscaler patterns",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -365,7 +346,6 @@ spec:
           {
             title: "RBAC",
             description: "Roles, ClusterRoles, bindings and service accounts",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -415,7 +395,6 @@ roleRef:
           {
             title: "Jobs & CronJobs",
             description: "Run one-off and scheduled batch workloads",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -471,7 +450,6 @@ spec:
           {
             title: "Debugging & Events",
             description: "Diagnose failures with events, jsonpath and explain",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

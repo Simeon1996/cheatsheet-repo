@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Statistics", userId: admin.id },
+    where: { name: "Statistics", userId: null },
   });
 
   const stats = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "📊",
       color: "teal",
       description: "Probability theory, discrete and continuous distributions, descriptive statistics, hypothesis testing, confidence intervals, and regression",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Probability Fundamentals",
             description: "Axioms, conditional probability, independence, Bayes' theorem, and combinatorics",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -103,7 +90,6 @@ STIRLING'S APPROXIMATION
           {
             title: "Descriptive Statistics",
             description: "Central tendency, spread, shape, and moments",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -165,7 +151,6 @@ STANDARDISATION (Z-score)
           {
             title: "Discrete Distributions",
             description: "Bernoulli, Binomial, Geometric, Negative Binomial, Poisson, and Hypergeometric",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -224,7 +209,6 @@ HYPERGEOMETRIC  — sampling without replacement
           {
             title: "Continuous Distributions",
             description: "Uniform, Normal, Exponential, Gamma, Beta, t, Chi-squared, and F",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -315,7 +299,6 @@ F  F(d₁, d₂)  — ratio of chi-squared variables
           {
             title: "Random Variables & Expectation",
             description: "CDF, PDF, PMF, transformations, MGF, and joint distributions",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -401,7 +384,6 @@ CUMULANT GENERATING FUNCTION
           {
             title: "Limit Theorems",
             description: "Law of large numbers, central limit theorem, and convergence modes",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -463,7 +445,6 @@ DELTA METHOD  (approximate distribution of g(X̄))
           {
             title: "Hypothesis Testing",
             description: "Null/alternative hypotheses, p-values, Type I/II errors, power, and common tests",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -561,7 +542,6 @@ NON-PARAMETRIC TESTS  (no distribution assumptions)
           {
             title: "Confidence Intervals",
             description: "Construction, interpretation, and common CI formulas",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -621,7 +601,6 @@ BOOTSTRAP CI  (non-parametric, general purpose)
           {
             title: "Regression & Correlation",
             description: "Linear regression, OLS, ANOVA table, residuals, and correlation measures",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -683,7 +662,6 @@ CORRELATION COEFFICIENTS
           {
             title: "Bayesian Statistics",
             description: "Prior/posterior, credible intervals, Bayesian vs frequentist, and conjugate analysis",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

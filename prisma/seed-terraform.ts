@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Terraform", userId: admin.id },
+    where: { name: "Terraform", userId: null },
   });
 
   const tf = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🏗️",
       color: "purple",
       description: "Terraform CLI commands and HCL patterns for infrastructure as code",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Core Workflow",
             description: "The essential init → plan → apply → destroy lifecycle",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -54,7 +41,6 @@ async function main() {
           {
             title: "Targeting & Partial Changes",
             description: "Apply or destroy specific resources without touching everything",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -70,7 +56,6 @@ async function main() {
           {
             title: "State Management",
             description: "Inspect, move, import and manipulate Terraform state",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -90,7 +75,6 @@ async function main() {
           {
             title: "Variables & Outputs",
             description: "Pass variables in and read outputs out",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -127,7 +111,6 @@ async function main() {
           {
             title: "Workspaces",
             description: "Manage multiple state environments with workspaces",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -149,7 +132,6 @@ async function main() {
           {
             title: "Providers & Modules",
             description: "Lock, install and manage providers and modules",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -191,7 +173,6 @@ async function main() {
           {
             title: "Remote Backends",
             description: "Configure S3 and Terraform Cloud backends for shared state",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -228,7 +209,6 @@ async function main() {
           {
             title: "Common HCL Patterns",
             description: "Loops, conditionals, locals and dynamic blocks",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -334,7 +314,6 @@ resource "aws_instance" "web" {
           {
             title: "Debugging & Inspection",
             description: "Inspect expressions, enable logging and troubleshoot plans",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

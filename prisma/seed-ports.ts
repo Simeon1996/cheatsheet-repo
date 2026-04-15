@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Common Ports", userId: admin.id },
+    where: { name: "Common Ports", userId: null },
   });
 
   const ports = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🔌",
       color: "gray",
       description: "Well-known and registered TCP/UDP port numbers for web, databases, email, file transfer, remote access, messaging, and monitoring services",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Port Ranges & Concepts",
             description: "Port number ranges, TCP vs UDP, and how to check open ports",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -96,7 +83,6 @@ ss -tlnp | grep :8080`,
           {
             title: "Web & HTTP",
             description: "HTTP, HTTPS, HTTP/3, proxies, and web server ports",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -133,7 +119,6 @@ PROXY / TUNNEL
           {
             title: "Remote Access & File Transfer",
             description: "SSH, Telnet, RDP, VNC, FTP, SFTP, and SCP",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -170,7 +155,6 @@ NOTE: SFTP (SSH File Transfer Protocol) uses port 22, NOT 115.
           {
             title: "Email",
             description: "SMTP, POP3, IMAP — submission, retrieval, and TLS variants",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -209,7 +193,6 @@ STARTTLS vs Implicit TLS
           {
             title: "DNS, DHCP & Network Services",
             description: "DNS, DHCP, NTP, SNMP, LDAP, and network infrastructure ports",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -250,7 +233,6 @@ DNS-OVER-TLS / DNS-OVER-HTTPS
           {
             title: "Databases",
             description: "Default ports for relational databases, NoSQL stores, and caches",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -325,7 +307,6 @@ DNS-OVER-TLS / DNS-OVER-HTTPS
           {
             title: "Containers & Orchestration",
             description: "Docker, Kubernetes, etcd, Consul, and container registry ports",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -392,7 +373,6 @@ DNS-OVER-TLS / DNS-OVER-HTTPS
           {
             title: "Monitoring & Observability",
             description: "Prometheus, Grafana, Jaeger, Zipkin, and metrics collection ports",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -429,7 +409,6 @@ DNS-OVER-TLS / DNS-OVER-HTTPS
           {
             title: "VPN, Security & Networking Tools",
             description: "VPN protocols, IDS/IPS, certificate services, and security tool ports",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -468,7 +447,6 @@ CERTIFICATE & PKI
           {
             title: "CI/CD & Developer Tools",
             description: "Jenkins, GitLab, Vault, and common developer service ports",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

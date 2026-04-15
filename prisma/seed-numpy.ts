@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "NumPy", userId: admin.id },
+    where: { name: "NumPy", userId: null },
   });
 
   const numpy = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🔢",
       color: "blue",
       description: "NumPy array creation, indexing, reshaping, broadcasting, math operations, linear algebra, random numbers, and performance patterns",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Array Creation",
             description: "Create arrays from lists, ranges, constants, random data, and structured types",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -104,7 +91,6 @@ np.random.randn(3, 3)       # standard normal`,
           {
             title: "Array Attributes & Inspection",
             description: "Shape, dtype, strides, memory layout, and type casting",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -154,7 +140,6 @@ rec["score"]`,
           {
             title: "Indexing & Slicing",
             description: "Basic slicing, fancy indexing, boolean masks, and np.newaxis",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -228,7 +213,6 @@ col + row                  # (3, 3) outer sum`,
           {
             title: "Reshaping & Combining",
             description: "reshape, flatten, transpose, stack, concatenate, and split",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -285,7 +269,6 @@ np.dsplit(b, 2)              # split along depth axis`,
           {
             title: "Math & Universal Functions (ufuncs)",
             description: "Element-wise math, reductions, ufunc methods, and aggregations",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -366,7 +349,6 @@ np.add.at(a, [0, 1, 0], 10)  # a[0] += 20, a[1] += 10`,
           {
             title: "Broadcasting",
             description: "Broadcasting rules, common patterns, and gotchas",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -419,7 +401,6 @@ a[:, np.newaxis] * b    # (3, 2)`,
           {
             title: "Linear Algebra",
             description: "dot, matmul, solve, eigenvalues, SVD, and matrix decompositions",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -489,7 +470,6 @@ np.linalg.matrix_rank(A)`,
           {
             title: "Sorting & Searching",
             description: "sort, argsort, searchsorted, unique, set operations, and np.where",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -550,7 +530,6 @@ np.isin(a, b)                   # same, preferred in newer NumPy`,
           {
             title: "I/O & Memory",
             description: "Save/load arrays, memory-mapped files, and copies vs views",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -611,7 +590,6 @@ np.ascontiguousarray(a)         # make C-contiguous copy if needed`,
           {
             title: "Performance Patterns",
             description: "Vectorisation, einsum, numexpr, and profiling tips",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

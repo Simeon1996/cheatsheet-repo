@@ -1,24 +1,13 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
   // Upsert admin user (idempotent)
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   // Delete existing AWS category owned by admin to avoid duplicates
   await prisma.category.deleteMany({
-    where: { name: "AWS CLI", userId: admin.id },
+    where: { name: "AWS CLI", userId: null },
   });
 
   const aws = await prisma.category.create({
@@ -27,7 +16,6 @@ async function main() {
       icon: "☁️",
       color: "orange",
       description: "AWS CLI commands across S3, EC2, IAM, ECS, Lambda, RDS, CloudWatch and more",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -35,7 +23,6 @@ async function main() {
           {
             title: "S3 — Buckets & Objects",
             description: "Create, list, copy, sync and delete S3 resources",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -58,7 +45,6 @@ async function main() {
           {
             title: "EC2 — Instances",
             description: "Describe, start, stop, and connect to EC2 instances",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -85,7 +71,6 @@ async function main() {
           {
             title: "IAM — Users, Roles & Policies",
             description: "Manage IAM identities and permissions",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -108,7 +93,6 @@ async function main() {
           {
             title: "ECS — Clusters & Services",
             description: "Deploy and manage containers with ECS",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -130,7 +114,6 @@ async function main() {
           {
             title: "Lambda — Functions",
             description: "Deploy, invoke and monitor Lambda functions",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -150,7 +133,6 @@ async function main() {
           {
             title: "RDS — Databases",
             description: "Manage RDS instances and snapshots",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -169,7 +151,6 @@ async function main() {
           {
             title: "CloudWatch — Logs & Metrics",
             description: "Query logs and metrics from CloudWatch",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -199,7 +180,6 @@ async function main() {
           {
             title: "ECR — Container Registry",
             description: "Push and pull Docker images to/from ECR",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -217,7 +197,6 @@ docker push <account-id>.dkr.ecr.<region>.amazonaws.com/<repo>:<tag>` },
           {
             title: "VPC & Networking",
             description: "Inspect VPCs, subnets, and route tables",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -233,7 +212,6 @@ docker push <account-id>.dkr.ecr.<region>.amazonaws.com/<repo>:<tag>` },
           {
             title: "SSM Parameter Store & Secrets",
             description: "Read and write secrets and config from SSM",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

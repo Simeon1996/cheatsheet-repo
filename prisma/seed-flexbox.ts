@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "CSS Flexbox", userId: admin.id },
+    where: { name: "CSS Flexbox", userId: null },
   });
 
   const flex = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "📐",
       color: "pink",
       description: "Complete CSS Flexbox reference — container properties, item properties and real-world layout patterns",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Container Setup",
             description: "Enable flexbox and control the main axis direction",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -81,7 +68,6 @@ async function main() {
           {
             title: "Main Axis — justify-content",
             description: "Distribute items along the main axis (horizontal by default)",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -103,7 +89,6 @@ async function main() {
           {
             title: "Cross Axis — align-items & align-content",
             description: "Align items perpendicular to the main axis",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -146,7 +131,6 @@ async function main() {
           {
             title: "Item Properties",
             description: "Control how individual flex items grow, shrink and size themselves",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -217,7 +201,6 @@ async function main() {
           {
             title: "Layout Patterns",
             description: "Real-world flexbox recipes you'll reach for constantly",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -377,7 +360,6 @@ async function main() {
           {
             title: "Gotchas & Fixes",
             description: "Tricky flexbox edge cases and how to solve them",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

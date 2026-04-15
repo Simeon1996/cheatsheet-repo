@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Azure CLI", userId: admin.id },
+    where: { name: "Azure CLI", userId: null },
   });
 
   const az = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🔷",
       color: "cyan",
       description: "Azure CLI (az) commands for compute, storage, networking, AKS, identity and more",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Auth & Account Setup",
             description: "Login, switch subscriptions and inspect your identity",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -52,7 +39,6 @@ async function main() {
           {
             title: "Resource Groups",
             description: "Create, inspect and clean up resource groups",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -69,7 +55,6 @@ async function main() {
           {
             title: "Virtual Machines",
             description: "Create, start, stop and connect to Azure VMs",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -99,7 +84,6 @@ async function main() {
           {
             title: "Storage — Accounts & Blobs",
             description: "Manage storage accounts, containers and blob objects",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -128,7 +112,6 @@ async function main() {
           {
             title: "AKS — Azure Kubernetes Service",
             description: "Create and manage AKS clusters and node pools",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -172,7 +155,6 @@ async function main() {
           {
             title: "Azure Container Registry (ACR)",
             description: "Build, push and pull container images with ACR",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -191,7 +173,6 @@ async function main() {
           {
             title: "Networking",
             description: "VNets, subnets, NSGs and public IP addresses",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -218,7 +199,6 @@ async function main() {
           {
             title: "IAM & RBAC",
             description: "Manage service principals, managed identities and role assignments",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -244,7 +224,6 @@ async function main() {
           {
             title: "Key Vault — Secrets & Keys",
             description: "Store and retrieve secrets, keys and certificates",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -263,7 +242,6 @@ async function main() {
           {
             title: "App Service",
             description: "Deploy and manage web apps on Azure App Service",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -291,7 +269,6 @@ async function main() {
           {
             title: "Monitoring & Diagnostics",
             description: "Query activity logs, metrics and set up alerts",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

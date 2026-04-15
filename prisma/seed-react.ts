@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "React", userId: admin.id },
+    where: { name: "React", userId: null },
   });
 
   const react = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "⚛️",
       color: "cyan",
       description: "React hooks, patterns, performance, context, refs and modern best practices",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Component Fundamentals",
             description: "Function components, props, JSX patterns and children",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -145,7 +132,6 @@ function Toggle({ render }: { render: (on: boolean, toggle: () => void) => React
           {
             title: "Core Hooks",
             description: "useState, useEffect, useReducer and useId",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -263,7 +249,6 @@ function Counter() {
           {
             title: "Refs",
             description: "useRef for DOM access, mutable values and forwardRef",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -356,7 +341,6 @@ modalRef.current?.open();`,
           {
             title: "Performance",
             description: "memo, useMemo, useCallback and useTransition",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -457,7 +441,6 @@ function FilteredList({ query }: { query: string }) {
           {
             title: "Context",
             description: "Share state across the tree without prop drilling",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -545,7 +528,6 @@ export const useCountDispatch = () => {
           {
             title: "Custom Hooks",
             description: "Reusable logic extracted into custom hooks",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -697,7 +679,6 @@ useLockBodyScroll(isModalOpen);`,
           {
             title: "Patterns",
             description: "Error boundaries, Suspense, portals, compound components",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -881,7 +862,6 @@ Tabs.Panel = TabPanel;
           {
             title: "Common Mistakes & Fixes",
             description: "Stale closures, infinite loops, key misuse and batching",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

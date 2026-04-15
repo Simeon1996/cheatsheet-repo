@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Docker", userId: admin.id },
+    where: { name: "Docker", userId: null },
   });
 
   const docker = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🐋",
       color: "cyan",
       description: "Docker CLI, Dockerfile patterns, Compose, networking, volumes and registry operations",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Images",
             description: "Build, tag, inspect and clean up Docker images",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -60,7 +47,6 @@ async function main() {
           {
             title: "Containers",
             description: "Run, stop, inspect and manage container lifecycles",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -89,7 +75,6 @@ async function main() {
           {
             title: "Logs, Exec & Inspect",
             description: "Debug running containers — logs, shell access and low-level inspection",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -114,7 +99,6 @@ async function main() {
           {
             title: "Volumes",
             description: "Create and manage named volumes for persistent data",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -135,7 +119,6 @@ async function main() {
           {
             title: "Networking",
             description: "Create networks and connect containers together",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -155,7 +138,6 @@ async function main() {
           {
             title: "Dockerfile Patterns",
             description: "Production-ready Dockerfile patterns and best practices",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -271,7 +253,6 @@ VOLUME ["/app/data"]`,
           {
             title: "Docker Compose",
             description: "Define and run multi-container applications",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -353,7 +334,6 @@ networks:
           {
             title: "Registry & Security",
             description: "Login to registries, scan images and manage credentials",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -374,7 +354,6 @@ networks:
           {
             title: "System & Cleanup",
             description: "Reclaim disk space and inspect Docker system usage",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

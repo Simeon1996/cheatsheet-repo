@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Bash", userId: admin.id },
+    where: { name: "Bash", userId: null },
   });
 
   const bash = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "💲",
       color: "green",
       description: "Bash scripting reference: variables, arrays, functions, control flow, string/arithmetic operations, I/O, error handling, and script patterns",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Variables & Parameters",
             description: "Declaring, expanding, and applying default values to variables and special parameters",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -105,7 +92,6 @@ shift 2       # discard first two`,
           {
             title: "Strings & Arithmetic",
             description: "String manipulation, case conversion, printf formatting, and arithmetic",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -171,7 +157,6 @@ awk 'BEGIN { printf "%.4f\\n", 10/3 }'`,
           {
             title: "Arrays",
             description: "Indexed arrays, associative arrays, and common array operations",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -233,7 +218,6 @@ if [[ -v colors["red"] ]]; then echo "exists"; fi`,
           {
             title: "Control Flow",
             description: "if/elif/else, case, for, while, until, break, and continue",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -322,7 +306,6 @@ done`,
           {
             title: "Functions",
             description: "Declaring functions, local variables, return values, and common patterns",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -405,7 +388,6 @@ retry 3 curl -sf https://api.example.com/health`,
           {
             title: "Input / Output & Redirection",
             description: "read, file descriptors, redirection, pipes, and process substitution",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -488,7 +470,6 @@ false | true; echo $?   # 1 (without pipefail would be 0)`,
           {
             title: "Error Handling & Debugging",
             description: "set options, trap, strict mode, and bash debug techniques",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -561,7 +542,6 @@ shellcheck script.sh`,
           {
             title: "Script Structure & Patterns",
             description: "Shebang, getopts argument parsing, lock files, and script templates",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -637,7 +617,6 @@ trap 'rm -rf "$TMP" "$TMPDIR"' EXIT`,
           {
             title: "Advanced Features",
             description: "Brace expansion, globs, subshells, command grouping, and parallel execution",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

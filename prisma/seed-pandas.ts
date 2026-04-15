@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Pandas", userId: admin.id },
+    where: { name: "Pandas", userId: null },
   });
 
   const pandas = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🐼",
       color: "blue",
       description: "Pandas data manipulation: DataFrames, Series, indexing, cleaning, groupby, merging, reshaping, time series, and I/O",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Creating & Inspecting DataFrames",
             description: "Create DataFrames from dicts, lists, CSV, and inspect shape/dtypes/stats",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -88,7 +75,6 @@ df.memory_usage(deep=True)`,
           {
             title: "Selecting & Indexing",
             description: "loc, iloc, boolean masks, query, and MultiIndex",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -158,7 +144,6 @@ df.xs("one", level="second")  # cross-section`,
           {
             title: "Data Cleaning",
             description: "Handle missing values, duplicates, type casting, and string cleaning",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -224,7 +209,6 @@ s.str.get(0)                      # first character`,
           {
             title: "Transforming Data",
             description: "apply, map, assign, cut, clip, sort, and column operations",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -276,7 +260,6 @@ df["score"].replace({-1: np.nan, 999: np.nan})`,
           {
             title: "GroupBy & Aggregation",
             description: "groupby, agg, transform, filter, pivot_table, and crosstab",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -340,7 +323,6 @@ df.pivot(index="date", columns="metric", values="value")`,
           {
             title: "Merging & Joining",
             description: "merge, join, concat, and combine DataFrames",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -389,7 +371,6 @@ df1.combine_first(df2)`,
           {
             title: "Reshaping",
             description: "melt, stack, unstack, wide_to_long, and explode",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -426,7 +407,6 @@ pd.get_dummies(df["category"], drop_first=True)  # avoid dummy trap`,
           {
             title: "Time Series",
             description: "date parsing, resampling, rolling windows, and time zone handling",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -496,7 +476,6 @@ pd.bdate_range("2024-01-01", "2024-01-31")`,
           {
             title: "I/O — Reading & Writing",
             description: "CSV, Excel, JSON, Parquet, SQL, and clipboard",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -557,7 +536,6 @@ for chunk in pd.read_csv("big.csv", chunksize=10_000):
           {
             title: "Performance & Useful Patterns",
             description: "Efficient operations, method chaining, vectorisation, and memory tips",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

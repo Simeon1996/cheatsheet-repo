@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "Regex", userId: admin.id },
+    where: { name: "Regex", userId: null },
   });
 
   const regex = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🔍",
       color: "yellow",
       description: "Regular expressions reference: syntax, anchors, quantifiers, groups, lookaheads, flags, and practical patterns for validation and extraction",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Character Classes & Metacharacters",
             description: "Literal characters, wildcards, shorthand classes, and character sets",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -110,7 +97,6 @@ INSIDE A CHARACTER CLASS
           {
             title: "Anchors & Boundaries",
             description: "Position anchors, word boundaries, and multiline behaviour",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -147,7 +133,6 @@ EXAMPLES
           {
             title: "Quantifiers",
             description: "Greedy, lazy, and possessive quantifiers with repetition syntax",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -190,7 +175,6 @@ CATASTROPHIC BACKTRACKING  (ReDoS)
           {
             title: "Groups & Capturing",
             description: "Capturing groups, non-capturing groups, named groups, and backreferences",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -263,7 +247,6 @@ EXAMPLES
           {
             title: "Lookahead & Lookbehind",
             description: "Zero-width assertions: positive/negative lookahead and lookbehind",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -330,7 +313,6 @@ USING LOOKAHEADS FOR INSERT-STYLE REPLACEMENT
           {
             title: "Flags & Modifiers",
             description: "Global, case-insensitive, multiline, dotall, verbose, and unicode flags",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -390,7 +372,6 @@ html_re = re.compile(r"""
           {
             title: "Regex APIs by Language",
             description: "JavaScript, Python, and common CLI tools regex usage",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -504,7 +485,6 @@ awk 'NR>=5 && NR<=10'            file   # print lines 5-10`,
           {
             title: "Practical Validation Patterns",
             description: "Ready-to-use regex for email, URL, IP, dates, credit cards, and more",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -623,7 +603,6 @@ FILE EXTENSION
           {
             title: "Flavour Differences",
             description: "POSIX ERE, PCRE, RE2, and key differences between regex engines",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

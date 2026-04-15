@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "ML Math", userId: admin.id },
+    where: { name: "ML Math", userId: null },
   });
 
   const mlmath = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "∑",
       color: "indigo",
       description: "Mathematical foundations of machine learning: linear algebra, calculus, matrix calculus, probability theory, information theory, and statistical learning theory",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Linear Algebra Fundamentals",
             description: "Vectors, matrices, norms, inner products, projections, and matrix properties",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -125,7 +112,6 @@ LOW-RANK APPROXIMATION (Eckart-Young theorem)
           {
             title: "Calculus & Gradients",
             description: "Derivatives, chain rule, gradients, Jacobians, Hessians, and Taylor expansion",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -216,7 +202,6 @@ PROXIMAL GRADIENT (composite f = g + h, h non-smooth)
           {
             title: "Matrix Calculus",
             description: "Derivatives with respect to vectors and matrices, essential identities",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -272,7 +257,6 @@ KRONECKER PRODUCT IDENTITY
           {
             title: "Probability Theory",
             description: "Expectation, variance, covariance, inequalities, and convergence",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -360,7 +344,6 @@ DIRICHLET  Dir(α):   p(π)∝Πₖπₖ^(αₖ−1), E[πₖ]=αₖ/α₀  (α�
           {
             title: "Information Theory",
             description: "Entropy, mutual information, KL divergence, and the information bottleneck",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -427,7 +410,6 @@ FANO'S INEQUALITY
           {
             title: "Statistical Learning Theory",
             description: "Bias-variance tradeoff, PAC learning, VC dimension, and generalisation bounds",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -520,7 +502,6 @@ ELASTIC NET
           {
             title: "Bayesian Methods",
             description: "Bayes' theorem, conjugate priors, Bayesian inference, and variational methods",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -586,7 +567,6 @@ VAE (Variational Autoencoder)
           {
             title: "Kernel Methods",
             description: "Mercer's theorem, kernel trick, SVM primal/dual, and Gaussian processes",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -648,7 +628,6 @@ GAUSSIAN PROCESS
           {
             title: "Dimensionality & Manifold Hypothesis",
             description: "Curse of dimensionality, concentration of measure, and manifold learning",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -689,7 +668,6 @@ JOHNSON-LINDENSTRAUSS LEMMA
           {
             title: "Optimisation Theory",
             description: "Constrained optimisation, Lagrangians, KKT conditions, and duality",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

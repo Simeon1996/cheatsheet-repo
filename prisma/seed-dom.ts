@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "JavaScript DOM API", userId: admin.id },
+    where: { name: "JavaScript DOM API", userId: null },
   });
 
   const dom = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🌐",
       color: "yellow",
       description: "Querying, manipulating, traversing and observing the DOM — plus events, forms, dimensions and modern APIs",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "Querying the DOM",
             description: "Find elements with selectors, IDs, tags and relationships",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -110,7 +97,6 @@ card.contains(btn);                 // true if btn is inside card`,
           {
             title: "Creating & Modifying Elements",
             description: "Create, clone, insert and remove DOM nodes",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -201,7 +187,6 @@ el.isConnected;                 // modern equivalent`,
           {
             title: "Attributes, Classes & Styles",
             description: "Read and write attributes, class lists and inline styles",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -281,7 +266,6 @@ computed.getPropertyValue("--color-primary"); // custom prop`,
           {
             title: "Events",
             description: "Add listeners, delegate events and work with the event object",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -417,7 +401,6 @@ el.addEventListener("pointermove", handler);`,
           {
             title: "DOM Traversal",
             description: "Navigate the DOM tree — parents, children and siblings",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -476,7 +459,6 @@ function walkText(node) {
           {
             title: "Dimensions & Scroll",
             description: "Measure elements and control scroll position",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -546,7 +528,6 @@ document.documentElement.scrollTop; // also works`,
           {
             title: "Observers",
             description: "IntersectionObserver, MutationObserver and ResizeObserver",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -647,7 +628,6 @@ chartObserver.observe(chartContainer);`,
           {
             title: "Forms & Input",
             description: "Read, validate and control form elements",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -722,7 +702,6 @@ form.querySelector(":invalid")?.focus();`,
           {
             title: "Useful Patterns",
             description: "Debounce, throttle, template cloning and URL/history",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [

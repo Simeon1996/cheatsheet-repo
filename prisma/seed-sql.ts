@@ -1,22 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await hash(process.env.ADMIN_PASSWORD ?? "changeme", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@cheatsheet.dev" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@cheatsheet.dev",
-      hashedPassword,
-    },
-  });
 
   await prisma.category.deleteMany({
-    where: { name: "SQL", userId: admin.id },
+    where: { name: "SQL", userId: null },
   });
 
   const sql = await prisma.category.create({
@@ -25,7 +14,6 @@ async function main() {
       icon: "🗄️",
       color: "blue",
       description: "SQL fundamentals — querying, joins, aggregation, window functions, indexes, CTEs and performance patterns",
-      userId: admin.id,
       isPublic: true,
       snippets: {
         create: [
@@ -33,7 +21,6 @@ async function main() {
           {
             title: "SELECT & Filtering",
             description: "Query rows, filter with WHERE, sort and limit results",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -132,7 +119,6 @@ SELECT revenue / NULLIF(sessions, 0) AS revenue_per_session FROM stats;`,
           {
             title: "JOINs",
             description: "Combine rows from multiple tables",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -205,7 +191,6 @@ WHERE o.status = 'completed'; -- turns it into an INNER JOIN effectively`,
           {
             title: "Aggregation & Grouping",
             description: "GROUP BY, aggregate functions and HAVING",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -279,7 +264,6 @@ FROM orders;`,
           {
             title: "Subqueries & CTEs",
             description: "Nested queries, WITH clauses and recursive CTEs",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -379,7 +363,6 @@ SELECT depth, name FROM org_tree ORDER BY depth, name;`,
           {
             title: "Window Functions",
             description: "ROW_NUMBER, RANK, LAG, LEAD, running totals and percentiles",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -466,7 +449,6 @@ FROM results;`,
           {
             title: "DDL — Schema Definition",
             description: "CREATE, ALTER, DROP tables, columns and constraints",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -547,7 +529,6 @@ ALTER TABLE user_sessions RENAME TO sessions;`,
           {
             title: "Indexes",
             description: "Create, choose and analyse indexes for query performance",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -620,7 +601,6 @@ WHERE o.created_at > NOW() - INTERVAL '7 days';
           {
             title: "Data Modification",
             description: "INSERT, UPDATE, DELETE, UPSERT and RETURNING",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -716,7 +696,6 @@ TRUNCATE TABLE orders, order_items CASCADE; -- truncate dependents too`,
           {
             title: "Transactions & Locking",
             description: "ACID transactions, savepoints, isolation levels and locking",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
@@ -795,7 +774,6 @@ COMMIT;`,
           {
             title: "Useful Patterns",
             description: "Pagination, pivot, gaps, deduplication and full-text search",
-            userId: admin.id,
             isPublic: true,
             commands: {
               create: [
