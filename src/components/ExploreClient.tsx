@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import CategorySidebar, { CategoryData } from "@/components/CategorySidebar";
 import SnippetCard, { SnippetData } from "@/components/SnippetCard";
-import { Compass, FolderOpen, Menu } from "lucide-react";
+import SearchBar, { SearchSnippet } from "@/components/SearchBar";
+import { Compass, FolderOpen, Menu, Search } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
 
 interface ExploreClientProps {
@@ -27,6 +28,7 @@ export default function ExploreClient({
   const [snippets, setSnippets] = useState<SnippetData[]>(initialSnippets);
   const [loadingSnippets, setLoadingSnippets] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState<SearchSnippet[] | null>(null);
 
   const selectCategory = useCallback(
     async (id: string) => {
@@ -69,7 +71,47 @@ export default function ExploreClient({
         />
 
         <main className="flex-1 overflow-y-auto">
-          {selectedCategory ? (
+          <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-sm px-4 sm:px-6 py-2">
+            <SearchBar onResults={setSearchResults} />
+          </div>
+
+          {searchResults !== null ? (
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="md:hidden shrink-0 rounded-lg p-2 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors"
+                  aria-label="Open categories"
+                >
+                  <Menu className="h-5 w-5" />
+                </button>
+                <Search className="h-5 w-5 text-zinc-400 shrink-0" />
+                <h1 className="text-lg font-bold text-zinc-100">
+                  {searchResults.length === 0
+                    ? "No results"
+                    : `${searchResults.length} result${searchResults.length === 1 ? "" : "s"}`}
+                </h1>
+              </div>
+              {searchResults.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
+                  <Search className="h-12 w-12 mb-4 opacity-40" />
+                  <p className="text-lg font-medium">No matches found</p>
+                  <p className="text-sm mt-1">Try a different search term</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {searchResults.map((snippet) => (
+                    <div key={snippet.id}>
+                      <p className="text-xs text-zinc-500 mb-2 font-medium uppercase tracking-wider">
+                        {snippet.category.icon} {snippet.category.name}
+                      </p>
+                      <SnippetCard snippet={snippet as SnippetData} readOnly />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : selectedCategory ? (
             <div className="p-4 sm:p-6">
               {/* Mobile header row */}
               <div className="flex items-center gap-3 mb-6">

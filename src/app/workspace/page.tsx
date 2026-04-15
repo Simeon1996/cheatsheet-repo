@@ -11,8 +11,9 @@ import AssistantWidget from "@/components/AssistantWidget";
 import CategoryModal from "@/components/modals/CategoryModal";
 import SnippetModal from "@/components/modals/SnippetModal";
 import CommandModal from "@/components/modals/CommandModal";
+import SearchBar, { SearchSnippet } from "@/components/SearchBar";
 import Button from "@/components/ui/Button";
-import { Plus, FolderOpen, Pencil, Trash2, Menu } from "lucide-react";
+import { Plus, FolderOpen, Pencil, Trash2, Menu, Search } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
 import { getColorClasses } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -37,6 +38,8 @@ export default function WorkspacePage() {
   const [commandModalOpen, setCommandModalOpen] = useState(false);
   const [editingCommand, setEditingCommand] = useState<CommandData | null>(null);
   const [activeSnippetId, setActiveSnippetId] = useState<string | null>(null);
+
+  const [searchResults, setSearchResults] = useState<SearchSnippet[] | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -317,7 +320,66 @@ export default function WorkspacePage() {
         />
 
         <main className="flex-1 overflow-y-auto">
-          {selectedCategory ? (
+          <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-sm px-4 sm:px-6 py-2">
+            <SearchBar onResults={setSearchResults} />
+          </div>
+
+          {searchResults !== null ? (
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="md:hidden shrink-0 rounded-lg p-2 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors"
+                  aria-label="Open categories"
+                >
+                  <Menu className="h-5 w-5" />
+                </button>
+                <Search className="h-5 w-5 text-zinc-400 shrink-0" />
+                <h1 className="text-lg font-bold text-zinc-100">
+                  {searchResults.length === 0
+                    ? "No results"
+                    : `${searchResults.length} result${searchResults.length === 1 ? "" : "s"}`}
+                </h1>
+              </div>
+              {searchResults.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
+                  <Search className="h-12 w-12 mb-4 opacity-40" />
+                  <p className="text-lg font-medium">No matches found</p>
+                  <p className="text-sm mt-1">Try a different search term</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {searchResults.map((snippet) => (
+                    <div key={snippet.id}>
+                      <p className="text-xs text-zinc-500 mb-2 font-medium uppercase tracking-wider">
+                        {snippet.category.icon} {snippet.category.name}
+                      </p>
+                      <SnippetCard
+                        snippet={snippet}
+                        onEdit={() => {
+                          setEditingSnippet(snippet as SnippetData);
+                          setSnippetModalOpen(true);
+                        }}
+                        onDelete={() => handleDeleteSnippet(snippet.id)}
+                        onAddCommand={() => {
+                          setEditingCommand(null);
+                          setActiveSnippetId(snippet.id);
+                          setCommandModalOpen(true);
+                        }}
+                        onEditCommand={(cmd) => {
+                          setEditingCommand(cmd);
+                          setActiveSnippetId(snippet.id);
+                          setCommandModalOpen(true);
+                        }}
+                        onDeleteCommand={handleDeleteCommand}
+                        onReorderCommand={handleReorderCommand}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : selectedCategory ? (
             <div className="p-4 sm:p-6">
               <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
                 <div className="flex items-center gap-3 min-w-0">
