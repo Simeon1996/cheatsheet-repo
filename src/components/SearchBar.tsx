@@ -6,6 +6,7 @@ import { Search, X } from "lucide-react";
 interface SearchBarProps {
   onResults: (results: SearchSnippet[] | null) => void;
   placeholder?: string;
+  categoryId?: string | null;
 }
 
 export interface SearchSnippet {
@@ -18,7 +19,7 @@ export interface SearchSnippet {
   commands: { id: string; label: string | null; content: string; language: string; order: number }[];
 }
 
-export default function SearchBar({ onResults, placeholder = "Search by title, description or command label…" }: SearchBarProps) {
+export default function SearchBar({ onResults, placeholder = "Search by title, description or command label…", categoryId }: SearchBarProps) {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -34,7 +35,10 @@ export default function SearchBar({ onResults, placeholder = "Search by title, d
     timerRef.current = setTimeout(async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(query.trim())}`);
+        const url = new URL("/api/search", window.location.origin);
+        url.searchParams.set("q", query.trim());
+        if (categoryId) url.searchParams.set("categoryId", categoryId);
+        const res = await fetch(url.toString());
         if (res.ok) {
           const data = await res.json();
           onResults(data);
@@ -47,7 +51,7 @@ export default function SearchBar({ onResults, placeholder = "Search by title, d
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [query, onResults]);
+  }, [query, categoryId, onResults]);
 
   function clear() {
     setQuery("");

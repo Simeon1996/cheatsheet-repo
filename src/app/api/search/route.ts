@@ -9,6 +9,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json([]);
   }
 
+  const categoryId = req.nextUrl.searchParams.get("categoryId") ?? undefined;
+
   const session = await getServerSession(authOptions);
 
   const snippets = await prisma.snippet.findMany({
@@ -17,6 +19,7 @@ export async function GET(req: NextRequest) {
         session
           ? { OR: [{ userId: session.user.id }, { isPublic: true }] }
           : { isPublic: true },
+        ...(categoryId ? [{ categoryId }] : []),
         {
           OR: [
             { title: { contains: q, mode: "insensitive" } },

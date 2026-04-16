@@ -72,7 +72,7 @@ export default function ExploreClient({
 
         <main className="flex-1 overflow-y-auto">
           <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-sm px-4 sm:px-6 py-2">
-            <SearchBar onResults={setSearchResults} />
+            <SearchBar onResults={setSearchResults} categoryId={selectedCategoryId} />
           </div>
 
           {searchResults !== null ? (
